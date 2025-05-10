@@ -1,0 +1,52 @@
+[package]
+name = "gameshop"
+version = "0.1.0"
+edition = "2024"
+authors = ["lowpolycat1"]
+description = "A Identity and Access Management System"
+license = "MIT"
+repository = "https://github.com/lowpolycat1/gameshop"
+
+[[bin]]
+name = "iam"
+path = "src/main.rs"
+
+[dependencies]
+tracing = "0.1.41"
+tracing-subscriber = "0.3.19"
+tokio = { version = "1.44.2", features = ["full", "macros", "rt-multi-thread"] }
+serde = { version = "1.0.219", features = ["derive"] }
+thiserror = { version = "2.0.12" }
+surrealdb = { version = "2.2.2", features = ["kv-rocksdb"] }
+actix-web = { version = "4.10.2", features = [] }
+dotenvy = { version = "0.15.7" }
+argon2 = { version = "0.5.3", features = ["password-hash"] }
+uuid = "1.16.0"
+base64 = "0.22.1"
+chacha20poly1305 = "0.10.1"
+rand = "0.9.1"
+validator = "0.20.0"
+validator_derive = "0.20.0"
+subtle = { version = "2.6.1" }
+tracing-appender = { version = "0.2.3" }
+serde_json = "1.0.140"
+jsonwebtoken = "9.3.1"
+chrono = "0.4.41"
+actix-governor = "0.8.0"
+futures = { version = "0.3.31", features = ["async-await"] }
+actix-files = "0.6.6"
+actix-rt = "2.10.0"
+
+[build-dependencies]
+
+
+[dev-dependencies]
+
+
+[profile.release]
+lto = true
+codegen-units = 1
+opt-level = 3
+debug = false
+panic = "abort"
+# rpath = false

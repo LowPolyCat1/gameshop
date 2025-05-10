@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign Up - GameSwap</title>
+    <link rel="stylesheet" href="/web/style.css">
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1>GameSwap</h1>
+            <nav>
+                <a href="/web/index.html">Home</a>
+                <a href="/web/browse.html">Browse Games</a>
+                <a href="/web/sell.html">Sell a Game</a>
+                <a href="/web/signup.html">Sign Up</a>
+                <a href="/web/login.html">Login</a>
+            </nav>
+        </div>
+    </header>
+    <section class="main">
+        <div class="container">
+            <h2>Create Your Account</h2>
+            <form id="signup-form">
+                <label for="firstname">First Name</label>
+                <input type="text" id="firstname" name="firstname" required>
+
+                <label for="lastname">Last Name</label>
+                <input type="text" id="lastname" name="lastname" required>
+
+                <label for="username">Username</label>
+                <input type="text" id="username" name="username" required>
+
+                <label for="email">Email</label>
+                <input type="email" id="email" name="email" required>
+
+                <label for="password">Password</label>
+                <input type="password" id="password" name="password" required>
+
+                <button type="submit" class="cta">Sign Up</button>
+            </form>
+            <div id="signup-message" style="margin-top:1rem;"></div>
+            <p>Already have an account? <a href="/web/login.html">Login here</a>.</p>
+        </div>
+    </section>
+    <footer>
+        <div class="container">
+            <p>&copy; 2025 GameSwap. Peer-to-peer videogame marketplace.</p>
+        </div>
+    </footer>
+    <script src="/web/signup.js"></script>
+</body>
+</html>
