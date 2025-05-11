@@ -13,10 +13,10 @@ const JWT_SECRET_ENV_VAR: &str = "secret";
 fn setup() {
     // Load environment variables from GitHub Actions environment
     if env::var(ENCRYPTION_KEY_ENV).is_err() {
-        env::set_var(ENCRYPTION_KEY_ENV, ENCRYPTION_KEY_ENV_VAR);
+        unsafe { env::set_var(ENCRYPTION_KEY_ENV, ENCRYPTION_KEY_ENV_VAR) };
     }
     if env::var(JWT_SECRET_ENV).is_err() {
-        env::set_var(JWT_SECRET_ENV, JWT_SECRET_ENV_VAR);
+        unsafe { env::set_var(JWT_SECRET_ENV, JWT_SECRET_ENV_VAR) };
     }
 }
 
@@ -93,7 +93,7 @@ mod tests {
         use crate::jwt::generate_jwt;
         use crate::middleware::AuthenticationMiddlewareFactory;
         use actix_web::http::header;
-        use actix_web::{http::StatusCode, test, web, App, HttpResponse};
+        use actix_web::{App, HttpResponse, http::StatusCode, test, web};
 
         async fn test_route() -> HttpResponse {
             HttpResponse::Ok().finish()
