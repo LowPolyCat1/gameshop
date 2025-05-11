@@ -6,6 +6,9 @@ document.addEventListener('DOMContentLoaded', function () {
     e.preventDefault();
 
     // Get form data
+    const firstname = form.firstname.value;
+    const lastname = form.lastname.value;
+    const username = form.username.value;
     const email = form.email.value;
     const password = form.password.value;
     // Add other fields as needed (e.g., username, but do not expect it back)
@@ -13,11 +16,10 @@ document.addEventListener('DOMContentLoaded', function () {
     try {
       const response = await fetch('/api/register', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ email, password /*, username: form.username.value */ })
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ firstname, lastname, username, email, password })
       });
+
 
       if (!response.ok) {
         let errorMsg = 'Signup failed';

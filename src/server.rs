@@ -270,18 +270,19 @@ async fn register(
         .register(firstname, lastname, username, password, email)
         .await
     {
-        Ok(_) => {
-            tracing::info!("User registered successfully");
-            HttpResponse::Created().body("User registered successfully")
-        }
-        Err(error) => {
-            tracing::error!("Error registering user: {}", error);
-            match error {
-                CustomError::UserAlreadyExists => {
-                    HttpResponse::Conflict().body(format!("Error: {}", error))
+        Ok(user_id) => {
+            // Generate a JWT for the new user
+            match crate::jwt::generate_jwt(user_id.to_string()) {
+                Ok(token) => {
+                    // 201 with JSON body containing token
+                    HttpResponse::Created().json(json!({ "success": true, "token": token }))
                 }
-                _ => HttpResponse::InternalServerError().body(format!("Error: {}", error)),
+                Err(_) => HttpResponse::InternalServerError()
+                    .json(json!({ "success": false, "error": "JWT generation failed" })),
             }
+        }
+        Err(err) => {
+            HttpResponse::Conflict().json(json!({ "success": false, "message": err.to_string() }))
         }
     }
 }
