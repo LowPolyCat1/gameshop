@@ -12,12 +12,7 @@
   <header>
     <div class="container">
       <h1>GameSwap</h1>
-      <!-- auth-aware navbar placeholder -->
-      <nav id="navbar-links">
-        <!-- navbar-auth.js will inject:
-             Home | Browse Games | Sell a Game
-             plus either [Profile Icon + Logout] or [Sign Up + Login] -->
-      </nav>
+      <nav id="navbar-links"></nav>
     </div>
   </header>
 
@@ -33,7 +28,7 @@
 
         <button type="submit" class="cta">Login</button>
       </form>
-      <div id="login-message" style="margin-top:1rem;"></div>
+      <div id="login-message" class="form-message"></div>
       <p>Don't have an account? <a href="/web/signup.html">Sign up here</a>.</p>
     </div>
   </section>
@@ -44,9 +39,7 @@
     </div>
   </footer>
 
-  <!-- Your login logic -->
   <script src="/web/login.js"></script>
-  <!-- Auth-aware navbar script: must be on every page -->
   <script src="/web/navbar-auth.js"></script>
 </body>
 
