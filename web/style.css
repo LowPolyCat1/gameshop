@@ -85,6 +85,7 @@ nav a:hover {
     margin-bottom: 2rem;
 }
 
+/* Call-to-action buttons */
 .cta {
     background: #ffb400;
     color: #23272f;
@@ -214,6 +215,66 @@ form button.cta {
     margin-top: 1rem;
 }
 
+/* Generic form-message (for login/signup feedback) */
+.form-message {
+    margin-top: 1rem;
+    font-size: 0.95rem;
+}
+
+/* Profile card styling */
+.profile-card {
+    background: #23272f;
+    color: #fff;
+    border-radius: 16px;
+    padding: 2rem 2.5rem;
+    max-width: 400px;
+    margin: 3rem auto 2rem auto;
+    box-shadow: 0 4px 20px rgba(35, 39, 47, 0.15);
+    text-align: center;
+}
+
+.profile-avatar {
+    width: 90px;
+    height: 90px;
+    border-radius: 50%;
+    background: #ffb400;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 1rem auto;
+    box-shadow: 0 2px 8px rgba(35, 39, 47, 0.10);
+}
+
+.profile-avatar svg {
+    width: 60px;
+    height: 60px;
+    display: block;
+}
+
+.profile-info {
+    margin-bottom: 1.5rem;
+}
+
+.profile-info h2 {
+    margin-bottom: 0.3rem;
+}
+
+.profile-actions button {
+    background: #ffb400;
+    color: #23272f;
+    border: none;
+    padding: 0.6rem 1.2rem;
+    border-radius: 20px;
+    font-weight: bold;
+    cursor: pointer;
+    margin: 0 0.5rem;
+    transition: background 0.2s;
+}
+
+.profile-actions button:hover {
+    background: #ffd966;
+}
+
 /* Footer styles */
 footer {
     background: #23272f;
@@ -242,6 +303,7 @@ footer {
     }
 }
 
+/* Profile icon styling in navbar */
 .profile-link svg {
     border-radius: 50%;
     background: #fff;

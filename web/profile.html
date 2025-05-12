@@ -6,75 +6,19 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Your Profile - GameSwap</title>
     <link rel="stylesheet" href="/web/style.css">
-    <style>
-        .profile-card {
-            background: #23272f;
-            color: #fff;
-            border-radius: 16px;
-            padding: 2rem 2.5rem;
-            max-width: 400px;
-            margin: 3rem auto 2rem auto;
-            box-shadow: 0 4px 20px rgba(35, 39, 47, 0.15);
-            text-align: center;
-        }
-
-        .profile-avatar {
-            width: 90px;
-            height: 90px;
-            border-radius: 50%;
-            background: #ffb400;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin: 0 auto 1rem auto;
-            box-shadow: 0 2px 8px rgba(35, 39, 47, 0.10);
-        }
-
-        .profile-avatar svg {
-            width: 60px;
-            height: 60px;
-            display: block;
-        }
-
-        .profile-info {
-            margin-bottom: 1.5rem;
-        }
-
-        .profile-info h2 {
-            margin-bottom: 0.3rem;
-        }
-
-        .profile-actions button {
-            background: #ffb400;
-            color: #23272f;
-            border: none;
-            padding: 0.6rem 1.2rem;
-            border-radius: 20px;
-            font-weight: bold;
-            cursor: pointer;
-            margin: 0 0.5rem;
-            transition: background 0.2s;
-        }
-
-        .profile-actions button:hover {
-            background: #ffd966;
-        }
-    </style>
 </head>
 
 <body>
     <header>
         <div class="container">
             <h1>GameSwap</h1>
-            <!-- auth-aware navbar: empty on load, will be filled by navbar-auth.js -->
             <nav id="navbar-links"></nav>
         </div>
     </header>
 
     <section class="main">
-        <div class="profile-card" id="profile-card">
-            <div class="profile-avatar" id="profile-avatar">
-                <!-- SVG Profile Icon -->
+        <div class="profile-card">
+            <div class="profile-avatar">
                 <svg viewBox="0 0 24 24" fill="#23272f" xmlns="http://www.w3.org/2000/svg">
                     <circle cx="12" cy="8" r="6" />
                     <path d="M12 16c-6 0-9 3-9 4.5V22h18v-1.5C21 19 18 16 12 16z" />
@@ -85,7 +29,7 @@
             </div>
             <div class="profile-actions">
                 <button onclick="window.location.href='/web/edit-profile.html'">Edit Profile</button>
-                <button id="logout-btn">Logout</button>
+                <button id="logout-btn" class="cta">Logout</button>
             </div>
         </div>
     </section>
@@ -96,26 +40,17 @@
         </div>
     </footer>
 
-    <!-- 1) Inject auth-aware navbar on every page -->
     <script src="/web/navbar-auth.js"></script>
-
-    <!-- 2) Profile-page protection & username display -->
     <script>
         document.addEventListener('DOMContentLoaded', function () {
             const jwt = localStorage.getItem('jwt');
             const username = localStorage.getItem('username');
-
             if (!jwt || !username) {
-                // not logged in → force to login page
                 window.location.href = '/web/login.html';
                 return;
             }
-
-            // show the stored username
             document.getElementById('profile-username').textContent = username;
-
-            // hook logout button
-            document.getElementById('logout-btn').addEventListener('click', function () {
+            document.getElementById('logout-btn').addEventListener('click', () => {
                 localStorage.removeItem('jwt');
                 localStorage.removeItem('username');
                 window.location.href = '/web/index.html';
