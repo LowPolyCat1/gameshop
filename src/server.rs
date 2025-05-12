@@ -233,7 +233,7 @@ fn parse_server_port(server_port_string: &str) -> Result<u16, CustomError> {
 /// # Returns
 ///
 /// A `Result` indicating success or failure.
-#[post("/api/register")]
+#[post("/auth/register")]
 async fn register(
     req: web::Json<RegisterRequest>,
     data: web::Data<AppState>,
@@ -296,7 +296,7 @@ async fn register(
 /// # Returns
 ///
 /// A `Result` indicating success or failure.
-#[post("/api/login")]
+#[post("/auth/login")]
 async fn login(req: web::Json<LoginRequest>, data: web::Data<AppState>) -> impl Responder {
     tracing::info!("Authenticating user");
     // Validate the request body
@@ -438,7 +438,7 @@ async fn change_password(
     }
 }
 
-#[get("/home")]
+#[get("/")]
 async fn index(_req: HttpRequest) -> Result<NamedFile> {
     let path: PathBuf = "web/index.html".parse().unwrap();
     Ok(NamedFile::open(path)?)

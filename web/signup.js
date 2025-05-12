@@ -14,7 +14,7 @@ document.addEventListener('DOMContentLoaded', function () {
     // Add other fields as needed (e.g., username, but do not expect it back)
 
     try {
-      const response = await fetch('/api/register', {
+      const response = await fetch('/auth/register', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ firstname, lastname, username, email, password })

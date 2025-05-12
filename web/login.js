@@ -10,7 +10,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const password = form.password.value;
 
     try {
-      const response = await fetch('/api/login', {
+      const response = await fetch('/auth/login', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
