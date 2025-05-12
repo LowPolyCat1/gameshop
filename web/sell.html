@@ -3,9 +3,10 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Sell a Game - GameSwap</title>
     <link rel="stylesheet" href="/web/style.css">
+    <script src="navbar-auth.js" defer></script> <!--This has to be here or else the profile won't load correctly-->
 </head>
 
 <body>
@@ -21,6 +22,7 @@
             <h2>Sell a Game</h2>
             <p>Fill out the form below to list your game for sale.</p>
             <form class="sell-form">
+                <!-- form fields -->
                 <label for="title">Game Title</label>
                 <input type="text" id="title" name="title" required>
 
@@ -52,8 +54,6 @@
             <p>&copy; 2025 GameSwap. Peer-to-peer videogame marketplace.</p>
         </div>
     </footer>
-
-    <script src="/web/navbar-auth.js"></script>
 </body>
 
 </html>
