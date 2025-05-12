@@ -318,7 +318,8 @@ async fn login(req: web::Json<LoginRequest>, data: web::Data<AppState>) -> impl 
             tracing::info!("User authenticated successfully");
             // Generate JWT
             match crate::jwt::generate_jwt(user.id.to_string()) {
-                Ok(token) => HttpResponse::Ok().json(json!({"success": true, "token": token})),
+                Ok(token) => HttpResponse::Ok()
+                    .json(json!({"success": true, "token": token, "username": user.username})),
                 Err(error) => {
                     tracing::error!("Error generating JWT: {}", error);
                     HttpResponse::InternalServerError()

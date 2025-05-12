@@ -1,24 +1,24 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Browse Games - GameSwap</title>
     <link rel="stylesheet" href="/web/style.css">
 </head>
+
 <body>
     <header>
         <div class="container">
             <h1>GameSwap</h1>
-            <nav>
-                <a href="/web/index.html">Home</a>
-                <a href="/web/browse.html">Browse Games</a>
-                <a href="/web/sell.html">Sell a Game</a>
-                <a href="/web/signup.html">Sign Up</a>
-                <a href="/web/login.html">Login</a>
+            <!-- NOTE: nav has the proper id for navbar-auth.js to hook into -->
+            <nav id="navbar-links">
+                <!-- navbar-auth.js will inject Home, Browse, Sell, plus Login/Sign Up OR Profile/Logout -->
             </nav>
         </div>
     </header>
+
     <section class="main">
         <div class="container">
             <h2>Browse Games</h2>
@@ -26,10 +26,15 @@
             <!-- Game listings would go here -->
         </div>
     </section>
+
     <footer>
         <div class="container">
             <p>&copy; 2025 GameSwap. Peer-to-peer videogame marketplace.</p>
         </div>
     </footer>
+
+    <!-- Include your auth-aware navbar script -->
+    <script src="/web/navbar-auth.js"></script>
 </body>
+
 </html>

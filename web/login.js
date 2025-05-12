@@ -31,6 +31,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
       const data = await response.json();
       const jwt = data.token || data.jwt; // adjust according to your API's response
+      const username = data.username || data.username;
 
       if (!jwt) {
         messageDiv.textContent = 'Login failed: No token received.';
@@ -38,8 +39,16 @@ document.addEventListener('DOMContentLoaded', function () {
         return;
       }
 
+      if (!username) {
+        messageDiv.textContent = 'Login failed: No username.';
+        messageDiv.style.color = 'red';
+        return;
+      }
+
       // Store JWT in localStorage
       localStorage.setItem('jwt', jwt);
+
+      localStorage.setItem('username', username);
 
       messageDiv.textContent = 'Login successful!';
       messageDiv.style.color = 'green';
