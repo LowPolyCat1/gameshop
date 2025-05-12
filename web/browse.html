@@ -12,9 +12,10 @@
     <header>
         <div class="container">
             <h1>GameSwap</h1>
-            <!-- NOTE: nav has the proper id for navbar-auth.js to hook into -->
             <nav id="navbar-links">
-                <!-- navbar-auth.js will inject Home, Browse, Sell, plus Login/Sign Up OR Profile/Logout -->
+                <!-- navbar-auth.js will inject:
+             Home | Browse Games | Sell a Game
+             plus either [Profile Icon + Logout] or [Sign Up + Login] -->
             </nav>
         </div>
     </header>
@@ -23,7 +24,7 @@
         <div class="container">
             <h2>Browse Games</h2>
             <p>Explore the latest listings from gamers across the country.</p>
-            <!-- Game listings would go here -->
+            <!-- TODO: dynamically load and render game listings here -->
         </div>
     </section>
 
@@ -33,7 +34,7 @@
         </div>
     </footer>
 
-    <!-- Include your auth-aware navbar script -->
+    <!-- Auth-aware navbar script: must be on every page -->
     <script src="/web/navbar-auth.js"></script>
 </body>
 

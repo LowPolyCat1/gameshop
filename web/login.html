@@ -12,15 +12,15 @@
   <header>
     <div class="container">
       <h1>GameSwap</h1>
-      <nav>
-        <a href="/web/index.html">Home</a>
-        <a href="/web/browse.html">Browse Games</a>
-        <a href="/web/sell.html">Sell a Game</a>
-        <a href="/web/signup.html">Sign Up</a>
-        <a href="/web/login.html">Login</a>
+      <!-- auth-aware navbar placeholder -->
+      <nav id="navbar-links">
+        <!-- navbar-auth.js will inject:
+             Home | Browse Games | Sell a Game
+             plus either [Profile Icon + Logout] or [Sign Up + Login] -->
       </nav>
     </div>
   </header>
+
   <section class="main">
     <div class="container">
       <h2>Login to Your Account</h2>
@@ -37,12 +37,17 @@
       <p>Don't have an account? <a href="/web/signup.html">Sign up here</a>.</p>
     </div>
   </section>
+
   <footer>
     <div class="container">
       <p>&copy; 2025 GameSwap. Peer-to-peer videogame marketplace.</p>
     </div>
   </footer>
+
+  <!-- Your login logic -->
   <script src="/web/login.js"></script>
+  <!-- Auth-aware navbar script: must be on every page -->
+  <script src="/web/navbar-auth.js"></script>
 </body>
 
 </html>
