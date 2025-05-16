@@ -44,6 +44,8 @@ document.addEventListener('DOMContentLoaded', function () {
       // Store JWT in localStorage
       localStorage.setItem('jwt', jwt);
 
+      localStorage.setItem('username', username);
+
       messageDiv.textContent = 'Signup successful!';
       messageDiv.style.color = 'green';
 
