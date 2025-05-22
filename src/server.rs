@@ -414,7 +414,7 @@ async fn change_username(
 /// # Returns
 ///
 /// A `Result` indicating success or failure.
-#[post("/change_password")]
+#[post("/api/change_password")]
 async fn change_password(
     http_req: HttpRequest,
     req: web::Json<ChangePasswordRequest>,
