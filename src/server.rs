@@ -74,23 +74,15 @@ struct CreateOfferRequest {
 /// Struct representing the update offer request body
 #[derive(Debug, Deserialize, Serialize, Validate)]
 struct UpdateOfferRequest {
-    #[validate(
-        length(min = 1, message = "Game title cannot be empty"),
-    )]
+    #[validate(length(min = 1, message = "Game title cannot be empty"))]
     game_title: Option<String>,
-    #[validate(
-        length(min = 1, message = "Platform cannot be empty"),
-    )]
+    #[validate(length(min = 1, message = "Platform cannot be empty"))]
     platform: Option<String>,
-    #[validate(
-        length(min = 1, message = "Condition cannot be empty"),
-    )]
+    #[validate(length(min = 1, message = "Condition cannot be empty"))]
     condition: Option<String>,
     #[validate(range(min = 0.0, message = "Price cannot be negative"))]
     price: Option<f64>,
-    #[validate(
-        length(min = 1, message = "Description cannot be empty"),
-    )]
+    #[validate(length(min = 1, message = "Description cannot be empty"))]
     description: Option<String>,
 }
 
@@ -814,6 +806,6 @@ async fn delete_offer(
 
 #[get("/")]
 async fn index(_req: HttpRequest) -> Result<NamedFile> {
-    let path: PathBuf = "web/index.html".parse().unwrap();
+    let path: PathBuf = "/web/index.html".parse().unwrap();
     Ok(NamedFile::open(path)?)
 }

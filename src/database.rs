@@ -4,7 +4,8 @@
 
 use crate::encryption::{encrypt_with_random_nonce, generate_key};
 use crate::errors::custom_errors::CustomError;
-use crate::hashing::{hash_random_salt, verify_password};
+use crate::hashing::{hash_random_salt, verify_password}; // Assuming hash_random_salt can be used for email hashing too, or you'd add a separate email hashing function.
+use sha2::{Digest, Sha256}; // Added for email hashing
 
 use dotenvy::var;
 use serde::{Deserialize, Serialize};
@@ -30,10 +31,10 @@ pub struct User {
     pub username: String,
     /// The user's password hash.
     pub password_hash: String,
-    /// The user's encrypted email.
+    /// The user's encrypted email. This can be decrypted on the server if needed for specific operations (e.g., sending emails).
     pub encrypted_email: String,
-    /// The user's email address.
-    pub email: String,
+    /// The hash of the user's email address, used for lookups and uniqueness checks.
+    pub email_hash: String,
     /// The user's creation timestamp.
     pub created_at: String,
 }
@@ -133,20 +134,24 @@ impl Database {
                 exit(1);
             }
         };
-        match db.query("DEFINE FIELD email ON users TYPE string;").await {
-            Ok(_) => {}
-            Err(error) => {
-                tracing::error!("Error defining email field on users: {}", error);
-                exit(1);
-            }
-        };
+        // Define email_hash field and unique index
         match db
-            .query("DEFINE INDEX users_email ON users FIELDS email UNIQUE")
+            .query("DEFINE FIELD email_hash ON users TYPE string;")
             .await
         {
             Ok(_) => {}
             Err(error) => {
-                tracing::error!("Error defining users_email index on users: {}", error);
+                tracing::error!("Error defining email_hash field on users: {}", error);
+                exit(1);
+            }
+        };
+        match db
+            .query("DEFINE INDEX users_email_hash ON users FIELDS email_hash UNIQUE")
+            .await
+        {
+            Ok(_) => {}
+            Err(error) => {
+                tracing::error!("Error defining users_email_hash index on users: {}", error);
                 exit(1);
             }
         };
@@ -224,6 +229,7 @@ impl Database {
             }
         };
         // This defines a link to the 'user' table. Note: This link assumes 'user' is in the 'users' namespace.
+        // This setup (same database, different namespaces) allows this.
         match db
             .query("DEFINE FIELD seller_id ON offers TYPE record<user>;")
             .await
@@ -304,18 +310,22 @@ impl Database {
     ) -> Result<bool, CustomError> {
         self.use_user_namespace().await?; // Switch to user namespace
         tracing::info!("Registering user with email: {}", email);
-        let sql = "SELECT * FROM users WHERE email = $email";
+
+        // Hash the email for lookup and storage
+        let email_hash = format!("{:x}", Sha256::digest(email.as_bytes()));
+
+        let sql = "SELECT * FROM users WHERE email_hash = $email_hash";
 
         // Bind the parameters to the query.
         let mut vars: BTreeMap<String, Value> = BTreeMap::new();
-        vars.insert("email".into(), Value::from(email.as_str()));
+        vars.insert("email_hash".into(), Value::from(email_hash.as_str()));
 
         // Execute the query.
         let mut response = self.db.query(sql).bind(vars).await?;
         let mut users: Vec<User> = response.take(0)?;
 
         if let Some(_user) = users.pop() {
-            tracing::warn!("User with email {} already exists", email);
+            tracing::warn!("User with email hash {} already exists", email_hash);
             return Err(CustomError::UserAlreadyExists);
         }
 
@@ -349,7 +359,7 @@ impl Database {
         };
 
         // Create the SQL query.
-        let sql = "CREATE users SET id = $id, encrypted_firstname = $encrypted_firstname, encrypted_lastname = $encrypted_lastname, username = $username, password_hash = $password_hash, encrypted_email = $encrypted_email, email = $email, created_at = time::now();";
+        let sql = "CREATE users SET id = $id, encrypted_firstname = $encrypted_firstname, encrypted_lastname = $encrypted_lastname, username = $username, password_hash = $password_hash, encrypted_email = $encrypted_email, email_hash = $email_hash, created_at = time::now();";
 
         // Bind the parameters to the query.
         let mut vars: BTreeMap<String, Value> = BTreeMap::new();
@@ -368,7 +378,7 @@ impl Database {
             "encrypted_email".into(),
             Value::from(encrypted_email.as_str()),
         );
-        vars.insert("email".into(), Value::from(email.as_str()));
+        vars.insert("email_hash".into(), Value::from(email_hash.as_str()));
 
         // Execute the query.
         let created: Result<surrealdb::Response, surrealdb::Error> =
@@ -377,7 +387,10 @@ impl Database {
         // Return the result.
         match created {
             Ok(_) => {
-                tracing::info!("User registered successfully with email: {}", email);
+                tracing::info!(
+                    "User registered successfully with email hash: {}",
+                    email_hash
+                );
                 Ok(true)
             }
             Err(error) => {
@@ -412,13 +425,20 @@ impl Database {
         password: String,
     ) -> Result<User, CustomError> {
         self.use_user_namespace().await?; // Switch to user namespace
-        tracing::info!("Authenticating user with email: {}", email);
+        tracing::info!(
+            "Authenticating user with email (hashed for lookup): {}",
+            email
+        );
+
+        // Hash the incoming email for lookup
+        let email_hash = format!("{:x}", Sha256::digest(email.as_bytes()));
+
         // Create the SQL query.
-        let sql = "SELECT * FROM users WHERE email = $email";
+        let sql = "SELECT * FROM users WHERE email_hash = $email_hash";
 
         // Bind the parameters to the query.
         let mut vars: BTreeMap<String, Value> = BTreeMap::new();
-        vars.insert("email".into(), Value::from(email.as_str()));
+        vars.insert("email_hash".into(), Value::from(email_hash.as_str()));
 
         // Execute the query.
         let mut response = self.db.query(sql).bind(vars).await?;
@@ -426,14 +446,17 @@ impl Database {
 
         if let Some(user) = users.pop() {
             if verify_password(&password, &user.password_hash).is_ok() {
-                tracing::info!("User authenticated successfully with email: {}", email);
+                tracing::info!(
+                    "User authenticated successfully with email hash: {}",
+                    email_hash
+                );
                 Ok(user)
             } else {
-                tracing::warn!("Invalid password for user with email: {}", email);
+                tracing::warn!("Invalid password for user with email hash: {}", email_hash);
                 Err(CustomError::InvalidPassword)
             }
         } else {
-            tracing::warn!("User not found with email: {}", email);
+            tracing::warn!("User not found with email hash: {}", email_hash);
             Err(CustomError::UserNotFound)
         }
     }
