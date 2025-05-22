@@ -6,14 +6,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Browse Games - GameSwap</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="/web/style.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <style>
-        /* Custom styles to ensure Inter font is applied */
-        body {
-            font-family: 'Inter', sans-serif;
-        }
-    </style>
+    <link rel="stylesheet" href="/web/style.css">
 </head>
 
 <body class="min-h-screen flex flex-col bg-gray-100 text-gray-800">
@@ -21,17 +15,18 @@
         <div class="container mx-auto px-4 flex flex-col sm:flex-row justify-between items-center">
             <h1 class="text-3xl font-bold tracking-wide mb-4 sm:mb-0">GameSwap</h1>
             <nav id="navbar-links" class="flex flex-wrap justify-center sm:justify-end space-x-4">
-                </nav>
+            </nav>
         </div>
     </header>
 
     <main class="flex-grow py-8 px-4">
         <div class="container mx-auto">
             <h2 class="text-4xl font-extrabold text-gray-900 text-center mb-4">Browse Games</h2>
-            <p class="text-xl text-gray-600 text-center mb-10">Explore the latest listings from gamers across the country.</p>
+            <p class="text-xl text-gray-600 text-center mb-10">Explore the latest listings from gamers across the
+                country.</p>
 
             <div id="game-listings" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-                </div>
+            </div>
 
             <div id="loading-indicator" class="hidden text-center py-8">
                 <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-gray-900 mx-auto"></div>

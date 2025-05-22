@@ -1,2 +1,43 @@
-/* This file is intentionally left empty. All styling is now handled by Tailwind CSS classes
-   directly in the HTML and JavaScript files, or by the Google Fonts import for 'Inter'. */
+/*
+This file contains global, non-Tailwind CSS rules.
+All other styling is handled by Tailwind CSS utility classes directly in HTML/JS.
+*/
+
+/* Global font application */
+body {
+    font-family: 'Inter', sans-serif;
+}
+
+/* Custom animations for the landing page (index.html) */
+@keyframes fadeInDown {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Apply animation classes. Note: The animation-delay is applied directly in index.html for stagger. */
+.animate-fade-in-down {
+    animation: fadeInDown 1s ease-out forwards;
+}
+
+.animate-fade-in-up {
+    animation: fadeInUp 1s ease-out forwards;
+}

@@ -177,16 +177,20 @@ document.addEventListener('DOMContentLoaded', function () {
      */
     function createGameCard(game) {
         return `
-            <div class="bg-white rounded-xl shadow-lg overflow-hidden transform transition-transform duration-300 hover:scale-105 hover:shadow-xl">
-                <img src="${game.image}" alt="${game.game}" class="w-full h-48 object-cover object-center" onerror="this.onerror=null;this.src='https://placehold.co/400x250/FFB400/23272F?text=Image+Error';">
-                <div class="p-6">
+            <div class="bg-white rounded-xl shadow-lg overflow-hidden transform transition-transform duration-300 hover:scale-105 hover:shadow-xl flex flex-col">
+                <img src="${game.image}" alt="${game.game}" class="w-full h-48 object-cover object-center rounded-t-xl" onerror="this.onerror=null;this.src='https://placehold.co/400x250/FFB400/23272F?text=Image+Error';">
+                <div class="p-6 flex flex-col flex-grow">
                     <h3 class="text-xl font-semibold text-gray-900 mb-2 truncate">${game.title}</h3>
-                    <p class="text-gray-700 font-medium mb-1">Game: <span class="font-normal">${game.game}</span></p>
-                    <p class="text-gray-700 font-medium mb-1">Condition: <span class="font-normal">${game.condition}</span></p>
-                    <p class="text-gray-700 font-medium mb-1">Seller: <span class="font-normal text-blue-600">${game.seller_username}</span></p>
-                    <p class="text-2xl font-bold text-yellow-600 mb-4">${game.price}</p>
-                    <p class="text-gray-600 text-sm mb-4 line-clamp-3">${game.description}</p>
-                    <button class="bg-yellow-500 text-gray-900 font-bold py-2 px-6 rounded-full hover:bg-yellow-600 transition duration-300 ease-in-out shadow-md hover:shadow-lg">
+
+                    <div class="flex flex-col text-left mb-2">
+                        <p class="text-gray-700 font-medium flex items-baseline"><span class="flex-shrink-0 w-20">Game:</span> <span class="font-normal flex-grow">${game.game}</span></p>
+                        <p class="text-gray-700 font-medium flex items-baseline"><span class="flex-shrink-0 w-20">Condition:</span> <span class="font-normal flex-grow">${game.condition}</span></p>
+                        <p class="text-gray-700 font-medium flex items-baseline"><span class="flex-shrink-0 w-20">Seller:</span> <span class="font-normal text-blue-600 flex-grow">${game.seller_username}</span></p>
+                    </div>
+
+                    <p class="text-2xl font-bold text-yellow-600 mb-4 text-left">${game.price}</p>
+                    <p class="text-gray-600 text-sm mb-4 line-clamp-3 text-left flex-grow">${game.description}</p>
+                    <button class="bg-yellow-500 text-gray-900 font-bold py-2 px-6 rounded-full hover:bg-yellow-600 transition duration-300 ease-in-out shadow-md hover:shadow-lg mt-auto">
                         View Details
                     </button>
                 </div>
