@@ -3,34 +3,43 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sell a Game - GameSwap</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* Custom styles to ensure Inter font is applied */
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+    </style>
     <link rel="stylesheet" href="/web/style.css">
-    <script src="navbar-auth.js" defer></script> <!--This has to be here or else the profile won't load correctly-->
 </head>
 
-<body>
-    <header>
-        <div class="container">
-            <h1>GameSwap</h1>
-            <nav id="navbar-links"></nav>
+<body class="min-h-screen flex flex-col bg-gray-100 text-gray-800">
+    <header class="bg-gray-900 text-white py-4 shadow-md">
+        <div class="container mx-auto px-4 flex flex-col sm:flex-row justify-between items-center">
+            <h1 class="text-3xl font-bold tracking-wide mb-4 sm:mb-0">GameSwap</h1>
+            <nav id="navbar-links" class="flex flex-wrap justify-center sm:justify-end space-x-4"></nav>
         </div>
     </header>
 
-    <section class="main">
-        <div class="container">
-            <h2>Sell a Game</h2>
-            <p>Fill out the form below to list your game for sale.</p>
-            <form class="sell-form">
-                <!-- form fields -->
-                <label for="title">Game Title</label>
-                <input type="text" id="title" name="title" required>
+    <section class="flex-grow py-8 px-4">
+        <div class="container mx-auto text-center max-w-md">
+            <h2 class="text-4xl font-extrabold text-gray-900 mb-4">Sell a Game</h2>
+            <p class="text-xl text-gray-600 mb-8">Fill out the form below to list your game for sale.</p>
+            <form class="bg-white p-8 rounded-xl shadow-lg flex flex-col gap-4">
+                <label for="title" class="text-left font-medium text-gray-700">Game Title</label>
+                <input type="text" id="title" name="title" required
+                    class="p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-500">
 
-                <label for="platform">Platform</label>
-                <input type="text" id="platform" name="platform" required>
+                <label for="platform" class="text-left font-medium text-gray-700">Platform</label>
+                <input type="text" id="platform" name="platform" required
+                    class="p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-500">
 
-                <label for="condition">Condition</label>
-                <select id="condition" name="condition" required>
+                <label for="condition" class="text-left font-medium text-gray-700">Condition</label>
+                <select id="condition" name="condition" required
+                    class="p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-500 bg-white">
                     <option value="">Select</option>
                     <option value="New">New</option>
                     <option value="Like New">Like New</option>
@@ -38,22 +47,28 @@
                     <option value="Acceptable">Acceptable</option>
                 </select>
 
-                <label for="price">Price ($)</label>
-                <input type="number" id="price" name="price" min="1" required>
+                <label for="price" class="text-left font-medium text-gray-700">Price ($)</label>
+                <input type="number" id="price" name="price" min="1" required
+                    class="p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-500">
 
-                <label for="description">Description</label>
-                <textarea id="description" name="description" rows="3"></textarea>
+                <label for="description" class="text-left font-medium text-gray-700">Description</label>
+                <textarea id="description" name="description" rows="3"
+                    class="p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-500"></textarea>
 
-                <button type="submit" class="cta">List Game</button>
+                <button type="submit"
+                    class="bg-yellow-500 text-gray-900 font-bold py-3 px-6 rounded-full hover:bg-yellow-600 transition duration-300 ease-in-out shadow-md hover:shadow-lg mt-4">
+                    List Game
+                </button>
             </form>
         </div>
     </section>
 
-    <footer>
-        <div class="container">
-            <p>&copy; 2025 GameSwap. Peer-to-peer videogame marketplace.</p>
+    <footer class="bg-gray-900 text-white text-center py-4 mt-auto shadow-inner">
+        <div class="container mx-auto px-4">
+            <p class="text-sm">&copy; 2025 GameSwap. Peer-to-peer videogame marketplace.</p>
         </div>
     </footer>
+    <script src="/web/navbar-auth.js"></script>
 </body>
 
 </html>

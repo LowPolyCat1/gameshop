@@ -5,34 +5,49 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Browse Games - GameSwap</title>
+    <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="/web/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* Custom styles to ensure Inter font is applied */
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+    </style>
 </head>
 
-<body>
-    <header>
-        <div class="container">
-            <h1>GameSwap</h1>
-            <nav id="navbar-links"></nav>
+<body class="min-h-screen flex flex-col bg-gray-100 text-gray-800">
+    <header class="bg-gray-900 text-white py-4 shadow-md">
+        <div class="container mx-auto px-4 flex flex-col sm:flex-row justify-between items-center">
+            <h1 class="text-3xl font-bold tracking-wide mb-4 sm:mb-0">GameSwap</h1>
+            <nav id="navbar-links" class="flex flex-wrap justify-center sm:justify-end space-x-4">
+                </nav>
         </div>
     </header>
 
-    <section class="main">
-        <div class="container">
-            <h2>Browse Games</h2>
-            <p>Explore the latest listings from gamers across the country.</p>
-            <div class="game-listings">
-                <!-- dynamically loaded game-card elements -->
+    <main class="flex-grow py-8 px-4">
+        <div class="container mx-auto">
+            <h2 class="text-4xl font-extrabold text-gray-900 text-center mb-4">Browse Games</h2>
+            <p class="text-xl text-gray-600 text-center mb-10">Explore the latest listings from gamers across the country.</p>
+
+            <div id="game-listings" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                </div>
+
+            <div id="loading-indicator" class="hidden text-center py-8">
+                <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-gray-900 mx-auto"></div>
+                <p class="mt-4 text-gray-600">Loading more games...</p>
             </div>
         </div>
-    </section>
+    </main>
 
-    <footer>
-        <div class="container">
-            <p>&copy; 2025 GameSwap. Peer-to-peer videogame marketplace.</p>
+    <footer class="bg-gray-900 text-white text-center py-4 mt-auto shadow-inner">
+        <div class="container mx-auto px-4">
+            <p class="text-sm">&copy; 2025 GameSwap. Peer-to-peer videogame marketplace.</p>
         </div>
     </footer>
 
     <script src="/web/navbar-auth.js"></script>
+    <script src="/web/browse-games.js"></script>
 </body>
 
 </html>

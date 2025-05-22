@@ -5,27 +5,42 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>GameSwap</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* Custom styles to ensure Inter font is applied */
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+    </style>
     <link rel="stylesheet" href="/web/style.css">
 </head>
 
-<body>
-    <header>
-        <div class="container">
-            <h1>GameSwap</h1>
-            <nav id="navbar-links">
-                <!-- Auth links will be injected here by JS -->
+<body class="min-h-screen flex flex-col bg-gray-100 text-gray-800">
+    <header class="bg-gray-900 text-white py-4 shadow-md">
+        <div class="container mx-auto px-4 flex flex-col sm:flex-row justify-between items-center">
+            <h1 class="text-3xl font-bold tracking-wide mb-4 sm:mb-0">GameSwap</h1>
+            <nav id="navbar-links" class="flex flex-wrap justify-center sm:justify-end space-x-4">
             </nav>
         </div>
     </header>
-    <section class="main">
-        <div class="container">
-            <h2>Welcome to GameSwap!</h2>
-            <p>Buy and sell video games with other gamers, directly.</p>
+    <section class="flex-grow py-8 px-4">
+        <div class="container mx-auto text-center">
+            <h2 class="text-4xl font-extrabold text-gray-900 mb-4">Welcome to GameSwap!</h2>
+            <p class="text-xl text-gray-600 mb-10">Buy and sell video games with other gamers, directly.</p>
+            <a href="/web/browse.html"
+                class="inline-block bg-yellow-500 text-gray-900 font-bold py-3 px-8 rounded-full hover:bg-yellow-600 transition duration-300 ease-in-out shadow-md hover:shadow-lg">
+                Browse Games
+            </a>
+            <a href="/web/sell.html"
+                class="inline-block bg-gray-700 text-white font-bold py-3 px-8 rounded-full ml-4 hover:bg-gray-800 transition duration-300 ease-in-out shadow-md hover:shadow-lg">
+                Sell a Game
+            </a>
         </div>
     </section>
-    <footer>
-        <div class="container">
-            <p>&copy; 2025 GameSwap. Peer-to-peer videogame marketplace.</p>
+    <footer class="bg-gray-900 text-white text-center py-4 mt-auto shadow-inner">
+        <div class="container mx-auto px-4">
+            <p class="text-sm">&copy; 2025 GameSwap. Peer-to-peer videogame marketplace.</p>
         </div>
     </footer>
     <script src="/web/navbar-auth.js"></script>

@@ -5,38 +5,52 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Your Profile - GameSwap</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* Custom styles to ensure Inter font is applied */
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+    </style>
     <link rel="stylesheet" href="/web/style.css">
 </head>
 
-<body>
-    <header>
-        <div class="container">
-            <h1>GameSwap</h1>
-            <nav id="navbar-links"></nav>
+<body class="min-h-screen flex flex-col bg-gray-100 text-gray-800">
+    <header class="bg-gray-900 text-white py-4 shadow-md">
+        <div class="container mx-auto px-4 flex flex-col sm:flex-row justify-between items-center">
+            <h1 class="text-3xl font-bold tracking-wide mb-4 sm:mb-0">GameSwap</h1>
+            <nav id="navbar-links" class="flex flex-wrap justify-center sm:justify-end space-x-4"></nav>
         </div>
     </header>
 
-    <section class="main">
-        <div class="profile-card">
-            <div class="profile-avatar">
-                <svg viewBox="0 0 24 24" fill="#23272f" xmlns="http://www.w3.org/2000/svg">
+    <section class="flex-grow py-8 px-4">
+        <div class="bg-gray-900 text-white rounded-2xl p-8 max-w-md mx-auto my-12 shadow-xl text-center">
+            <div class="w-24 h-24 rounded-full bg-yellow-500 flex items-center justify-center mx-auto mb-4 shadow-lg">
+                <svg class="w-16 h-16 fill-gray-900" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                     <circle cx="12" cy="8" r="6" />
                     <path d="M12 16c-6 0-9 3-9 4.5V22h18v-1.5C21 19 18 16 12 16z" />
                 </svg>
             </div>
-            <div class="profile-info">
-                <h2 id="profile-username">Username</h2>
+            <div class="mb-6">
+                <h2 id="profile-username" class="text-3xl font-bold mb-2">Username</h2>
             </div>
-            <div class="profile-actions">
-                <button onclick="window.location.href='/web/edit-profile.html'">Edit Profile</button>
-                <button id="logout-btn" class="cta">Logout</button>
+            <div class="flex justify-center space-x-4">
+                <button onclick="window.location.href='/web/edit-profile.html'"
+                    class="bg-yellow-500 text-gray-900 font-bold py-2 px-6 rounded-full hover:bg-yellow-600 transition duration-300 ease-in-out shadow-md hover:shadow-lg">
+                    Edit Profile
+                </button>
+                <button id="logout-btn"
+                    class="bg-gray-700 text-white font-bold py-2 px-6 rounded-full hover:bg-gray-800 transition duration-300 ease-in-out shadow-md hover:shadow-lg">
+                    Logout
+                </button>
             </div>
         </div>
     </section>
 
-    <footer>
-        <div class="container">
-            <p>&copy; 2025 GameSwap. Peer-to-peer videogame marketplace.</p>
+    <footer class="bg-gray-900 text-white text-center py-4 mt-auto shadow-inner">
+        <div class="container mx-auto px-4">
+            <p class="text-sm">&copy; 2025 GameSwap. Peer-to-peer videogame marketplace.</p>
         </div>
     </footer>
 
