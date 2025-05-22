@@ -10,7 +10,7 @@ use actix_files::NamedFile;
 use actix_governor::{Governor, GovernorConfigBuilder};
 use actix_web::HttpRequest;
 use actix_web::Result;
-use actix_web::{App, HttpMessage, HttpResponse, Responder, get, post, web};
+use actix_web::{App, HttpMessage, HttpResponse, Responder, delete, get, post, put, web};
 use serde::{Deserialize, Serialize};
 use serde_json::json;
 use std::env::var;
@@ -54,6 +54,44 @@ struct ChangeUsernameRequest {
 struct ChangePasswordRequest {
     #[validate(length(min = 8, message = "Password must be at least 8 characters long"))]
     password: String,
+}
+
+/// Struct representing the create offer request body
+#[derive(Debug, Deserialize, Serialize, Validate)]
+struct CreateOfferRequest {
+    #[validate(length(min = 1, message = "Game title is required"))]
+    game_title: String,
+    #[validate(length(min = 1, message = "Platform is required"))]
+    platform: String,
+    #[validate(length(min = 1, message = "Condition is required"))]
+    condition: String,
+    #[validate(range(min = 0.0, message = "Price cannot be negative"))]
+    price: f64,
+    #[validate(length(min = 1, message = "Description is required"))]
+    description: String,
+}
+
+/// Struct representing the update offer request body
+#[derive(Debug, Deserialize, Serialize, Validate)]
+struct UpdateOfferRequest {
+    #[validate(
+        length(min = 1, message = "Game title cannot be empty"),
+    )]
+    game_title: Option<String>,
+    #[validate(
+        length(min = 1, message = "Platform cannot be empty"),
+    )]
+    platform: Option<String>,
+    #[validate(
+        length(min = 1, message = "Condition cannot be empty"),
+    )]
+    condition: Option<String>,
+    #[validate(range(min = 0.0, message = "Price cannot be negative"))]
+    price: Option<f64>,
+    #[validate(
+        length(min = 1, message = "Description cannot be empty"),
+    )]
+    description: Option<String>,
 }
 
 /// Application state shared across all routes
@@ -127,6 +165,12 @@ pub async fn start() -> Result<(), Box<dyn std::error::Error>> {
             .service(login)
             .service(change_username)
             .service(change_password)
+            .service(create_offer)
+            .service(get_all_offers)
+            .service(get_offer_by_id)
+            .service(get_offers_by_seller_id)
+            .service(update_offer)
+            .service(delete_offer)
             .service(index)
             .service(fs::Files::new("/web", "./web").show_files_listing())
     })
@@ -264,15 +308,33 @@ async fn register(
         .register(firstname, lastname, username, password, email)
         .await
     {
-        Ok(user_id) => {
-            // Generate a JWT for the new user
-            match crate::jwt::generate_jwt(user_id.to_string()) {
-                Ok(token) => {
-                    // 201 with JSON body containing token
-                    HttpResponse::Created().json(json!({ "success": true, "token": token }))
+        Ok(registered) => {
+            if registered {
+                // Generate a JWT for the new user. The `register` function returns a boolean,
+                // so we need to fetch the user again to get their ID for JWT generation.
+                // This is a simplification; ideally, `register` would return the User struct or its ID.
+                // For now, we'll assume a successful registration implies we can attempt to log them in.
+                // A more robust solution would involve the register function returning the user's ID.
+                match db
+                    .authenticate_user(req.0.email.clone().to_lowercase(), req.0.password.clone())
+                    .await
+                {
+                    Ok(user) => match crate::jwt::generate_jwt(user.id.to_string()) {
+                        Ok(token) => {
+                            HttpResponse::Created().json(json!({ "success": true, "token": token }))
+                        }
+                        Err(_) => HttpResponse::InternalServerError()
+                            .json(json!({ "success": false, "error": "JWT generation failed" })),
+                    },
+                    Err(e) => {
+                        tracing::error!("Failed to authenticate user after registration: {}", e);
+                        HttpResponse::InternalServerError()
+                            .json(json!({ "success": false, "error": "Failed to log in after registration" }))
+                    }
                 }
-                Err(_) => HttpResponse::InternalServerError()
-                    .json(json!({ "success": false, "error": "JWT generation failed" })),
+            } else {
+                HttpResponse::InternalServerError()
+                    .json(json!({ "success": false, "error": "User registration failed" }))
             }
         }
         Err(err) => {
@@ -324,9 +386,13 @@ async fn login(req: web::Json<LoginRequest>, data: web::Data<AppState>) -> impl 
         Err(error) => {
             tracing::error!("Error authenticating user: {}", error);
             match error {
-                CustomError::InvalidPassword => HttpResponse::Ok().json(json!({"success": false})),
-                CustomError::UserNotFound => HttpResponse::Ok().json(json!({"success": false})),
-                _ => HttpResponse::InternalServerError().json(json!({"success": false})),
+                CustomError::InvalidPassword => HttpResponse::Ok()
+                    .json(json!({"success": false, "message": "Invalid password"})),
+                CustomError::UserNotFound => {
+                    HttpResponse::Ok().json(json!({"success": false, "message": "User not found"}))
+                }
+                _ => HttpResponse::InternalServerError()
+                    .json(json!({"success": false, "message": "An internal error occurred"})),
             }
         }
     }
@@ -362,8 +428,13 @@ async fn change_username(
         .unwrap_or_else(|| "Unknown".to_string());
 
     match data.db.change_username(user_id, new_username).await {
-        Ok(_) => HttpResponse::Ok().json("Successfully changed username"),
-        Err(_error) => HttpResponse::InternalServerError().finish(),
+        Ok(_) => HttpResponse::Ok()
+            .json(json!({"success": true, "message": "Successfully changed username"})),
+        Err(error) => {
+            tracing::error!("Error changing username: {}", error);
+            HttpResponse::InternalServerError()
+                .json(json!({"success": false, "message": "Failed to change username"}))
+        }
     }
 }
 
@@ -397,8 +468,347 @@ async fn change_password(
         .unwrap_or_else(|| "Unknown".to_string());
 
     match data.db.change_password(user_id, new_password).await {
-        Ok(_) => HttpResponse::Ok().json("Successfully changed password"),
-        Err(_error) => HttpResponse::InternalServerError().finish(),
+        Ok(_) => HttpResponse::Ok()
+            .json(json!({"success": true, "message": "Successfully changed password"})),
+        Err(error) => {
+            tracing::error!("Error changing password: {}", error);
+            HttpResponse::InternalServerError()
+                .json(json!({"success": false, "message": "Failed to change password"}))
+        }
+    }
+}
+
+/// Creates a new game offer.
+///
+/// # Arguments
+///
+/// * `req` - The create offer request.
+/// * `data` - The application state.
+/// * `http_req` - The HTTP request (to get user ID from token).
+///
+/// # Returns
+///
+/// An `HttpResponse` indicating success or failure.
+#[post("/api/offers")]
+async fn create_offer(
+    req: web::Json<CreateOfferRequest>,
+    data: web::Data<AppState>,
+    http_req: HttpRequest,
+) -> impl Responder {
+    tracing::info!("Creating new offer");
+
+    // Validate the request body
+    if let Err(validation_errors) = req.0.validate() {
+        tracing::warn!("Validation error: {:?}", validation_errors);
+        return HttpResponse::BadRequest().json(validation_errors);
+    }
+
+    // Extract seller_id from the authenticated user's token
+    let seller_id = http_req
+        .extensions()
+        .get::<String>()
+        .cloned()
+        .unwrap_or_else(|| "Unknown".to_string());
+
+    if seller_id == "Unknown" {
+        tracing::warn!("Unauthorized attempt to create offer: Missing user ID in token.");
+        return HttpResponse::Unauthorized()
+            .json(json!({"success": false, "message": "Authentication required"}));
+    }
+
+    let game_title = req.0.game_title.clone();
+    let platform = req.0.platform.clone();
+    let condition = req.0.condition.clone();
+    let price = req.0.price;
+    let description = req.0.description.clone();
+
+    match data
+        .db
+        .create_offer(
+            game_title,
+            platform,
+            condition,
+            price,
+            description,
+            seller_id,
+        )
+        .await
+    {
+        Ok(offer) => {
+            tracing::info!("Offer created successfully: {:?}", offer.id);
+            HttpResponse::Created().json(json!({"success": true, "message": "Offer created successfully", "offer_id": offer.id}))
+        }
+        Err(error) => {
+            tracing::error!("Error creating offer: {}", error);
+            HttpResponse::InternalServerError().json(
+                json!({"success": false, "message": format!("Failed to create offer: {}", error)}),
+            )
+        }
+    }
+}
+
+/// Retrieves all game offers.
+///
+/// # Arguments
+///
+/// * `data` - The application state.
+///
+/// # Returns
+///
+/// An `HttpResponse` containing a list of offers or an error.
+#[get("/api/offers")]
+async fn get_all_offers(data: web::Data<AppState>) -> impl Responder {
+    tracing::info!("Retrieving all offers");
+    match data.db.get_all_offers().await {
+        Ok(offers) => {
+            tracing::info!("Successfully retrieved {} offers", offers.len());
+            HttpResponse::Ok().json(json!({"success": true, "offers": offers}))
+        }
+        Err(error) => {
+            tracing::error!("Error retrieving all offers: {}", error);
+            HttpResponse::InternalServerError().json(json!({"success": false, "message": format!("Failed to retrieve offers: {}", error)}))
+        }
+    }
+}
+
+/// Retrieves a single game offer by its ID.
+///
+/// # Arguments
+///
+/// * `path` - Path containing the offer ID.
+/// * `data` - The application state.
+///
+/// # Returns
+///
+/// An `HttpResponse` containing the offer or an error.
+#[get("/api/offers/{id}")]
+async fn get_offer_by_id(path: web::Path<String>, data: web::Data<AppState>) -> impl Responder {
+    let offer_id = path.into_inner();
+    tracing::info!("Retrieving offer with ID: {}", offer_id);
+    match data.db.get_offer_by_id(offer_id.clone()).await {
+        Ok(Some(offer)) => {
+            tracing::info!("Successfully retrieved offer: {:?}", offer.id);
+            HttpResponse::Ok().json(json!({"success": true, "offer": offer}))
+        }
+        Ok(None) => {
+            tracing::warn!("Offer with ID {} not found", offer_id);
+            HttpResponse::NotFound().json(json!({"success": false, "message": "Offer not found"}))
+        }
+        Err(error) => {
+            tracing::error!("Error retrieving offer {}: {}", offer_id, error);
+            HttpResponse::InternalServerError().json(json!({"success": false, "message": format!("Failed to retrieve offer: {}", error)}))
+        }
+    }
+}
+
+/// Retrieves all offers made by a specific seller.
+///
+/// # Arguments
+///
+/// * `path` - Path containing the seller ID.
+/// * `data` - The application state.
+///
+/// # Returns
+///
+/// An `HttpResponse` containing a list of offers or an error.
+#[get("/api/offers/seller/{seller_id}")]
+async fn get_offers_by_seller_id(
+    path: web::Path<String>,
+    data: web::Data<AppState>,
+) -> impl Responder {
+    let seller_id = path.into_inner();
+    tracing::info!("Retrieving offers for seller ID: {}", seller_id);
+    match data.db.get_offers_by_seller_id(seller_id.clone()).await {
+        Ok(offers) => {
+            tracing::info!(
+                "Successfully retrieved {} offers for seller {}",
+                offers.len(),
+                seller_id
+            );
+            HttpResponse::Ok().json(json!({"success": true, "offers": offers}))
+        }
+        Err(error) => {
+            tracing::error!(
+                "Error retrieving offers for seller {}: {}",
+                seller_id,
+                error
+            );
+            HttpResponse::InternalServerError().json(json!({"success": false, "message": format!("Failed to retrieve offers: {}", error)}))
+        }
+    }
+}
+
+/// Updates an existing game offer.
+///
+/// # Arguments
+///
+/// * `path` - Path containing the offer ID.
+/// * `req` - The update offer request.
+/// * `data` - The application state.
+/// * `http_req` - The HTTP request (to get user ID from token).
+///
+/// # Returns
+///
+/// An `HttpResponse` indicating success or failure.
+#[put("/api/offers/{id}")]
+async fn update_offer(
+    path: web::Path<String>,
+    req: web::Json<UpdateOfferRequest>,
+    data: web::Data<AppState>,
+    http_req: HttpRequest,
+) -> impl Responder {
+    let offer_id = path.into_inner();
+    tracing::info!("Updating offer with ID: {}", offer_id);
+
+    // Validate the request body
+    if let Err(validation_errors) = req.0.validate() {
+        tracing::warn!("Validation error: {:?}", validation_errors);
+        return HttpResponse::BadRequest().json(validation_errors);
+    }
+
+    // Extract user_id from the authenticated user's token
+    let user_id_from_token = http_req
+        .extensions()
+        .get::<String>()
+        .cloned()
+        .unwrap_or_else(|| "Unknown".to_string());
+
+    if user_id_from_token == "Unknown" {
+        tracing::warn!(
+            "Unauthorized attempt to update offer {}: Missing user ID in token.",
+            offer_id
+        );
+        return HttpResponse::Unauthorized()
+            .json(json!({"success": false, "message": "Authentication required"}));
+    }
+
+    // Verify ownership: Get the offer first to check its seller_id
+    match data.db.get_offer_by_id(offer_id.clone()).await {
+        Ok(Some(existing_offer)) => {
+            if existing_offer.seller_id.id.to_string() != user_id_from_token {
+                tracing::warn!(
+                    "Unauthorized attempt to update offer {}: User {} does not own this offer.",
+                    offer_id,
+                    user_id_from_token
+                );
+                return HttpResponse::Forbidden().json(json!({"success": false, "message": "You are not authorized to update this offer"}));
+            }
+        }
+        Ok(None) => {
+            tracing::warn!("Attempted to update non-existent offer: {}", offer_id);
+            return HttpResponse::NotFound()
+                .json(json!({"success": false, "message": "Offer not found"}));
+        }
+        Err(error) => {
+            tracing::error!("Error checking ownership for offer {}: {}", offer_id, error);
+            return HttpResponse::InternalServerError().json(json!({"success": false, "message": format!("Failed to verify offer ownership: {}", error)}));
+        }
+    }
+
+    let game_title = req.0.game_title.clone();
+    let platform = req.0.platform.clone();
+    let condition = req.0.condition.clone();
+    let price = req.0.price;
+    let description = req.0.description.clone();
+
+    match data
+        .db
+        .update_offer(
+            offer_id.clone(),
+            game_title,
+            platform,
+            condition,
+            price,
+            description,
+        )
+        .await
+    {
+        Ok(offer) => {
+            tracing::info!("Offer updated successfully: {:?}", offer.id);
+            HttpResponse::Ok().json(
+                json!({"success": true, "message": "Offer updated successfully", "offer": offer}),
+            )
+        }
+        Err(error) => {
+            tracing::error!("Error updating offer {}: {}", offer_id, error);
+            HttpResponse::InternalServerError().json(
+                json!({"success": false, "message": format!("Failed to update offer: {}", error)}),
+            )
+        }
+    }
+}
+
+/// Deletes a game offer.
+///
+/// # Arguments
+///
+/// * `path` - Path containing the offer ID.
+/// * `data` - The application state.
+/// * `http_req` - The HTTP request (to get user ID from token).
+///
+/// # Returns
+///
+/// An `HttpResponse` indicating success or failure.
+#[delete("/api/offers/{id}")]
+async fn delete_offer(
+    path: web::Path<String>,
+    data: web::Data<AppState>,
+    http_req: HttpRequest,
+) -> impl Responder {
+    let offer_id = path.into_inner();
+    tracing::info!("Deleting offer with ID: {}", offer_id);
+
+    // Extract user_id from the authenticated user's token
+    let user_id_from_token = http_req
+        .extensions()
+        .get::<String>()
+        .cloned()
+        .unwrap_or_else(|| "Unknown".to_string());
+
+    if user_id_from_token == "Unknown" {
+        tracing::warn!(
+            "Unauthorized attempt to delete offer {}: Missing user ID in token.",
+            offer_id
+        );
+        return HttpResponse::Unauthorized()
+            .json(json!({"success": false, "message": "Authentication required"}));
+    }
+
+    // Verify ownership: Get the offer first to check its seller_id
+    match data.db.get_offer_by_id(offer_id.clone()).await {
+        Ok(Some(existing_offer)) => {
+            if existing_offer.seller_id.id.to_string() != user_id_from_token {
+                tracing::warn!(
+                    "Unauthorized attempt to delete offer {}: User {} does not own this offer.",
+                    offer_id,
+                    user_id_from_token
+                );
+                return HttpResponse::Forbidden().json(json!({"success": false, "message": "You are not authorized to delete this offer"}));
+            }
+        }
+        Ok(None) => {
+            tracing::warn!("Attempted to delete non-existent offer: {}", offer_id);
+            return HttpResponse::NotFound()
+                .json(json!({"success": false, "message": "Offer not found"}));
+        }
+        Err(error) => {
+            tracing::error!("Error checking ownership for offer {}: {}", offer_id, error);
+            return HttpResponse::InternalServerError().json(json!({"success": false, "message": format!("Failed to verify offer ownership: {}", error)}));
+        }
+    }
+
+    match data.db.delete_offer(offer_id.clone()).await {
+        Ok(_) => {
+            tracing::info!("Offer {} deleted successfully", offer_id);
+            HttpResponse::Ok()
+                .json(json!({"success": true, "message": "Offer deleted successfully"}))
+        }
+        Err(error) => {
+            tracing::error!("Error deleting offer {}: {}", offer_id, error);
+            HttpResponse::InternalServerError().json(
+                json!({"success": false, "message": format!("Failed to delete offer: {}", error)}),
+            )
+        }
     }
 }
 
