@@ -338,36 +338,6 @@ async fn login(req: web::Json<LoginRequest>, data: web::Data<AppState>) -> impl 
     }
 }
 
-/// Pings the server.
-///
-/// # Returns
-///
-/// A `Result` containing the string "pong".
-#[get("/api/ping")]
-async fn ping(req: HttpRequest) -> impl Responder {
-    let user_id = req
-        .extensions()
-        .get::<String>()
-        .cloned()
-        .unwrap_or_else(|| "Unknown".to_string());
-    format!("pong from user: {}", user_id)
-}
-
-/// Debug route.
-///
-/// # Returns
-///
-/// A `Result` containing the user ID from the token.
-#[get("/api/debug")]
-async fn debug(req: HttpRequest) -> impl Responder {
-    let user_id = req
-        .extensions()
-        .get::<String>()
-        .cloned()
-        .unwrap_or_else(|| "Unknown".to_string());
-    format!("Debug: User ID from token: {}", user_id)
-}
-
 /// Changes the Username of a user.
 ///
 /// # Arguments
