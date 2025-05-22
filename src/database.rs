@@ -61,7 +61,7 @@ impl Database {
     /// # Errors
     ///
     /// Returns a `CustomError` if:
-    /// - The `DATABASE_PATH`, `DATABASE_NAMESPACE`, or `DATABASE_NAME` environment variables are not set.
+    /// - The `USER_DATABASE_PATH`, `DATABASE_NAMESPACE`, or `DATABASE_NAME` environment variables are not set.
     /// - The connection to the database fails.
     /// - Defining the unique index on the `users` table fails.
     pub async fn new() -> Result<Self, crate::errors::custom_errors::CustomError> {

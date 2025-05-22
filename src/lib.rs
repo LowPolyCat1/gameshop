@@ -21,4 +21,4 @@ pub mod middleware;
 /// The server module
 pub mod server;
 /// The database module
-pub mod user_database;
+pub mod database;

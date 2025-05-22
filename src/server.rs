@@ -2,7 +2,7 @@
 //!
 //! This module defines the Actix Web server and its routes for the IAM project.
 
-use crate::user_database::Database;
+use crate::database::Database;
 use crate::errors::custom_errors::CustomError;
 use crate::middleware::AuthenticationMiddlewareFactory;
 use actix_files as fs;
