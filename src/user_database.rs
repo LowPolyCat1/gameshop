@@ -1,4 +1,4 @@
-//! src/database.rs
+//! src/user_database.rs
 //!
 //! This module handles database interactions for the IAM project, using SurrealDB.
 
