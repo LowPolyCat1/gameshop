@@ -12,7 +12,7 @@ document.addEventListener('DOMContentLoaded', function () {
             seller_username: "LinkFanatic",
             price: "$45.00",
             description: "Immerse yourself in a vast open world! Comes with original case and manual. Barely played, looks new.",
-            image: "https://placehold.co/400x250/FFB400/23272F?text=Zelda+BotW"
+            image: "https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fassets.nintendo.com%2Fimage%2Fupload%2Fc_fill%2Cw_1200%2Fq_auto%3Abest%2Ff_auto%2Fdpr_2.0%2Fncom%2Fen_US%2Fgames%2Fswitch%2Ft%2Fthe-legend-of-zelda-breath-of-the-wild-switch%2Fhero&f=1&nofb=1&ipt=5af11b86f04ecc1806d7bb9b03650d8f185b606849fae3eb56b003617280bdcc"
         },
         {
             id: 2,
@@ -22,7 +22,7 @@ document.addEventListener('DOMContentLoaded', function () {
             seller_username: "TerranKing",
             price: "$30.00",
             description: "Brand new, still in shrink wrap. Perfect for collectors or new players!",
-            image: "https://placehold.co/400x250/23272F/FFFFFF?text=Starcraft+II"
+            image: "https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fassets-prd.ignimgs.com%2F2022%2F01%2F28%2Fstarcraft-2-wings-of-liberty-button-crop-1643355282078.jpg&f=1&nofb=1&ipt=a93af49d2f57034bfd8d700a6f0ab92e7419eea8227240b4f061dfa0debe14fd"
         },
         {
             id: 3,
@@ -32,7 +32,7 @@ document.addEventListener('DOMContentLoaded', function () {
             seller_username: "WastelandWanderer",
             price: "$20.00",
             description: "Explore the Commonwealth! Disc has minor scratches but plays perfectly. No manual.",
-            image: "https://placehold.co/400x250/B8B8B8/333333?text=Fallout+4"
+            image: "https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fcdn1.epicgames.com%2Foffer%2F9c1a74145a9145ec803d7452e80819a0%2FEGS_Fallout4_BethesdaGameStudios_S1_2560x1440-fb0e82fa71a74e750c95b57b91fc558d&f=1&nofb=1&ipt=05557713c9dd78a9fc587a6562a4d9967eccb61f808b3cb65b2f04677b1ee3dc"
         },
         {
             id: 4,
@@ -42,7 +42,7 @@ document.addEventListener('DOMContentLoaded', function () {
             seller_username: "GeraltOfRivia",
             price: "$50.00",
             description: "Includes all expansions on disc. Flawless condition, hours of monster hunting fun!",
-            image: "https://placehold.co/400x250/6A0DAD/FFFFFF?text=Witcher+3"
+            image: "https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fc1-ebgames.eb-cdn.com.au%2Fmerchandising%2Fimages%2Fscreenshots%2Fed3b1c7bbd6743d99bf7bca5d7a31938_l.jpg&f=1&nofb=1&ipt=0cf21920b774630adb98601280bbedbc024280396064dca33093cb17898fedef"
         },
         {
             id: 5,
