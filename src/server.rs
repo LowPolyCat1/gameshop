@@ -1,6 +1,6 @@
 //! src/server.rs
 //!
-//! This module defines the Actix Web server and its routes for the IAM project.
+//! This module defines the Actix Web server and its routes for the project.
 
 use crate::database::Database;
 use crate::errors::custom_errors::CustomError;
