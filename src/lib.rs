@@ -6,8 +6,6 @@
 #[cfg(test)]
 pub mod tests;
 
-/// The database module
-pub mod database;
 /// The encryption module
 pub mod encryption;
 /// The errors module
@@ -22,3 +20,5 @@ pub mod logging;
 pub mod middleware;
 /// The server module
 pub mod server;
+/// The database module
+pub mod user_database;

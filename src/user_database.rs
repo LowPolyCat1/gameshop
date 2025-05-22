@@ -11,9 +11,9 @@ use std::collections::BTreeMap;
 
 use std::process::exit;
 use surrealdb::{
+    Surreal,
     engine::local::{Db, RocksDb},
     sql::Value,
-    Surreal,
 };
 use uuid::Uuid;
 

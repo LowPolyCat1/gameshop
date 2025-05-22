@@ -3,7 +3,7 @@
 //! This module provides JWT (JSON Web Token) generation and validation functionalities.
 
 use chrono::{Duration, Utc};
-use jsonwebtoken::{decode, encode, errors::Error, DecodingKey, EncodingKey, Header, Validation};
+use jsonwebtoken::{DecodingKey, EncodingKey, Header, Validation, decode, encode, errors::Error};
 use serde::{Deserialize, Serialize};
 use std::env;
 

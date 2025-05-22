@@ -2,14 +2,14 @@
 //!
 //! This module provides encryption and decryption functionalities using the ChaCha20Poly1305 algorithm.
 
-use base64::{engine::general_purpose, Engine as base64Engine};
+use base64::{Engine as base64Engine, engine::general_purpose};
 use chacha20poly1305::{
-    aead::{Aead, KeyInit},
     ChaCha20Poly1305, Key, Nonce,
+    aead::{Aead, KeyInit},
 };
 use dotenvy::var;
-use rand::rng;
 use rand::RngCore;
+use rand::rng;
 
 use crate::errors::custom_errors::CustomError;
 
