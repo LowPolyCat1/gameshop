@@ -123,12 +123,8 @@ pub async fn start() -> Result<(), Box<dyn std::error::Error>> {
             .app_data(web::Data::new(app_state.clone()))
             .wrap(Governor::new(&governor_conf))
             .wrap(AuthenticationMiddlewareFactory::new())
-            // Register the ping route
-            .service(ping)
-            // Register the register route
             .service(register)
             .service(login)
-            .service(debug)
             .service(change_username)
             .service(change_password)
             .service(index)
@@ -198,7 +194,6 @@ fn load_dotenv() -> Result<(), CustomError> {
     }
 }
 
-/// Parses the server port string into a u16
 /// Parses the server port string into a u16.
 ///
 /// # Arguments
@@ -222,7 +217,6 @@ fn parse_server_port(server_port_string: &str) -> Result<u16, CustomError> {
     }
 }
 
-/// Registers a new user
 /// Registers a new user.
 ///
 /// # Arguments
