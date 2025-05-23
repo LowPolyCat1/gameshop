@@ -42,29 +42,12 @@
         </div>
     </section>
 
-    <footer class="bg-gray-900 text-white text-center py-4 mt-auto shadow-inner">
-        <div class="container mx-auto px-4">
-            <p class="text-sm">&copy; 2025 GameSwap. Peer-to-peer videogame marketplace.</p>
-        </div>
-    </footer>
 
+
+
+    <script src="/web/profile.js"></script>
     <script src="/web/navbar-auth.js"></script>
-    <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            const jwt = localStorage.getItem('jwt');
-            const username = localStorage.getItem('username');
-            if (!jwt || !username) {
-                window.location.href = '/web/login.html';
-                return;
-            }
-            document.getElementById('profile-username').textContent = username;
-            document.getElementById('logout-btn').addEventListener('click', () => {
-                localStorage.removeItem('jwt');
-                localStorage.removeItem('username');
-                window.location.href = '/web/index.html';
-            });
-        });
-    </script>
+    <script src="/web/add-footer.js"></script>
 </body>
 
 </html>
