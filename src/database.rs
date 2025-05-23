@@ -82,7 +82,6 @@ impl Database {
     ///
     /// Returns a `CustomError` if:
     /// - The `DATABASE_PATH`, `DATABASE_NAME`, `USER_DATABASE_NAMESPACE`, or `OFFER_DB_NAMESPACE`
-    /// ///   environment variables are not set.
     /// - The connection to the database fails.
     /// - Defining any of the schemas or indexes fails.
     pub async fn new() -> Result<Self, CustomError> {
