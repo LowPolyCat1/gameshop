@@ -14,14 +14,14 @@ use std::process::exit;
 use surrealdb::{
     Surreal,
     engine::local::{Db, RocksDb},
-    sql::{Thing, Value},
+    sql::{Thing, Value}, // Import Thing here
 };
 use uuid::Uuid;
 
 /// Represents a user in the database.
 #[derive(Debug, Serialize, Deserialize, Clone)]
 pub struct User {
-    /// The user's ID.
+    /// The user's ID. This is a SurrealDB Thing, representing the full record ID (e.g., 'users:uuid').
     pub id: Thing,
     /// The user's encrypted first name.
     pub encrypted_firstname: String,
@@ -54,7 +54,7 @@ pub struct Offer {
     pub price: f64,
     /// A detailed description of the offer.
     pub description: String,
-    /// The ID of the user who created this offer. This is a Thing reference to the 'user' table.
+    /// The ID of the user who created this offer. This is a Uuid reference to the 'user' table.
     pub seller_id: Thing,
     /// The timestamp when the offer was created.
     pub created_at: String,
@@ -82,7 +82,7 @@ impl Database {
     ///
     /// Returns a `CustomError` if:
     /// - The `DATABASE_PATH`, `DATABASE_NAME`, `USER_DATABASE_NAMESPACE`, or `OFFER_DB_NAMESPACE`
-    ///   environment variables are not set.
+    /// ///   environment variables are not set.
     /// - The connection to the database fails.
     /// - Defining any of the schemas or indexes fails.
     pub async fn new() -> Result<Self, CustomError> {
@@ -563,19 +563,17 @@ impl Database {
         condition: String,
         price: f64,
         description: String,
-        seller_id: String,
+        seller_id: String, // This is the UUID string
     ) -> Result<Offer, CustomError> {
         self.use_offer_namespace().await?; // Switch to offer namespace
         tracing::info!("Creating offer for game: {}", game_title);
 
         let offer_id = Uuid::new_v4().to_string();
-        // The Thing reference now correctly points to a user in the 'users' namespace.
-        // Note: When creating a Thing for a record in another namespace, it's crucial that
-        // the other namespace is accessible from the current database connection.
-        // This setup (same database, different namespaces) allows this.
-        let seller_thing = Thing::from((String::from("user"), seller_id));
 
-        let sql = "CREATE offers SET id = $id, game_title = $game_title, platform = $platform, condition = $condition, price = $price, description = $description, seller_id = $seller_id, created_at = time::now();";
+        // Construct the Thing for seller_id explicitly, e.g., 'user:your-uuid'
+        let seller_id_thing = Thing::from(("user".to_string(), seller_id.clone()));
+
+        let sql = "CREATE offers SET id = $id, game_title = $game_title, platform = $platform, condition = $condition, price = $price, description = $description, seller_id = $seller_id_thing, created_at = time::now();";
 
         let mut vars: BTreeMap<String, Value> = BTreeMap::new();
         vars.insert("id".into(), Value::from(offer_id.as_str()));
@@ -584,7 +582,8 @@ impl Database {
         vars.insert("condition".into(), Value::from(condition.as_str()));
         vars.insert("price".into(), Value::from(price));
         vars.insert("description".into(), Value::from(description.as_str()));
-        vars.insert("seller_id".into(), Value::from(seller_thing));
+        // Bind the constructed Thing for seller_id
+        vars.insert("seller_id_thing".into(), Value::from(seller_id_thing));
 
         let mut response: surrealdb::Response = self.db.query(sql).bind(vars).await?;
         let created_offer: Option<Offer> = response.take(0)?;
@@ -645,10 +644,12 @@ impl Database {
     ) -> Result<Vec<Offer>, CustomError> {
         self.use_offer_namespace().await?; // Switch to offer namespace
         tracing::info!("Retrieving offers for seller ID: {}", seller_id);
-        let seller_thing = Thing::from((String::from("user"), seller_id));
-        let sql = "SELECT * FROM offers WHERE seller_id = $seller_id ORDER BY created_at DESC;";
+        // Correctly form the record link for the WHERE clause
+        let seller_id_thing = Thing::from(("user".to_string(), seller_id));
+        let sql =
+            "SELECT * FROM offers WHERE seller_id = $seller_id_thing ORDER BY created_at DESC;";
         let mut vars: BTreeMap<String, Value> = BTreeMap::new();
-        vars.insert("seller_id".into(), Value::from(seller_thing));
+        vars.insert("seller_id_thing".into(), Value::from(seller_id_thing));
 
         let mut response: surrealdb::Response = self.db.query(sql).bind(vars).await?;
         let offers: Vec<Offer> = response.take(0)?;

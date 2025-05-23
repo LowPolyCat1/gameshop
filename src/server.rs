@@ -14,9 +14,10 @@ use serde::{Deserialize, Serialize};
 use serde_json::json;
 use std::env::var;
 use std::path::PathBuf;
+use surrealdb::sql::Id;
 use tracing_appender::rolling::Rotation;
 use validator::Validate;
-use validator_derive::Validate;
+use validator_derive::Validate; // Import Id for extracting UUID from Thing
 
 /// Struct representing the login request body
 #[derive(Debug, Deserialize, Serialize, Validate)]
@@ -108,8 +109,19 @@ async fn login(db: web::Data<Database>, req: web::Json<LoginRequest>) -> HttpRes
         .await
     {
         Ok(user) => {
-            let user_id = user.id.id.to_string(); // Extract ID from Thing
-            let token = crate::jwt::generate_jwt(user_id).unwrap();
+            // user.id is now surrealdb::sql::Thing
+            let user_id_string = match user.id.id {
+                Id::Uuid(uuid) => uuid.to_string(),
+                Id::String(uuid_str) => uuid_str, // Handle String variant
+                _ => {
+                    tracing::error!("Unexpected ID type for user_id: {:?}", user.id.id);
+                    return HttpResponse::InternalServerError().json(json!({
+                        "success": false,
+                        "message": "Internal server error: Invalid user ID format."
+                    }));
+                }
+            };
+            let token = crate::jwt::generate_jwt(user_id_string).unwrap(); // Consider handling unwrap more gracefully
             HttpResponse::Ok().json(json!({
                 "success": true,
                 "message": "Login successful",
@@ -167,8 +179,19 @@ async fn register(db: web::Data<Database>, req: web::Json<RegisterRequest>) -> H
                 .await
             {
                 Ok(user) => {
-                    let user_id = user.id.id.to_string(); // Extract ID from Thing
-                    let token = crate::jwt::generate_jwt(user_id).unwrap();
+                    // user.id is now surrealdb::sql::Thing
+                    let user_id_string = match user.id.id {
+                        Id::Uuid(uuid) => uuid.to_string(),
+                        Id::String(uuid_str) => uuid_str, // Handle String variant
+                        _ => {
+                            tracing::error!("Unexpected ID type for user_id: {:?}", user.id.id);
+                            return HttpResponse::InternalServerError().json(json!({
+                                "success": false,
+                                "message": "Internal server error: Invalid user ID format."
+                            }));
+                        }
+                    };
+                    let token = crate::jwt::generate_jwt(user_id_string).unwrap(); // Consider handling unwrap more gracefully
                     HttpResponse::Ok().json(json!({
                         "success": true,
                         "message": "Registration successful",
@@ -215,6 +238,7 @@ async fn change_username(
     req: HttpRequest,
     body: web::Json<ChangeUsernameRequest>,
 ) -> HttpResponse {
+    // Retrieve user_id as String consistently
     let user_id = match req.extensions().get::<String>() {
         Some(id) => id.clone(),
         None => {
@@ -268,6 +292,15 @@ async fn change_password(
     req: HttpRequest,
     body: web::Json<ChangePasswordRequest>,
 ) -> HttpResponse {
+    // Add #[derive(Validate)] to ChangePasswordRequest
+    if let Err(e) = body.validate() {
+        tracing::warn!("Change password request validation failed: {:?}", e);
+        return HttpResponse::BadRequest().json(json!({
+            "success": false,
+            "message": e.to_string()
+        }));
+    }
+    // Retrieve user_id as String consistently
     let user_id = match req.extensions().get::<String>() {
         Some(id) => id.clone(),
         None => {
@@ -277,14 +310,6 @@ async fn change_password(
             }));
         }
     };
-
-    if let Err(e) = body.validate() {
-        tracing::warn!("Change password request validation failed: {:?}", e);
-        return HttpResponse::BadRequest().json(json!({
-            "success": false,
-            "message": e.to_string()
-        }));
-    }
 
     match db.change_password(user_id, body.new_password.clone()).await {
         Ok(_) => HttpResponse::Ok().json(json!({
@@ -321,6 +346,7 @@ async fn create_offer(
     req: HttpRequest,
     body: web::Json<CreateOfferRequest>,
 ) -> HttpResponse {
+    // Retrieve seller_id as String consistently
     let seller_id = match req.extensions().get::<String>() {
         Some(id) => id.clone(),
         None => {
@@ -440,6 +466,7 @@ async fn get_offer_by_id(db: web::Data<Database>, path: web::Path<String>) -> Ht
 /// An `HttpResponse` containing a list of offers or an error.
 #[get("my-offers")]
 async fn get_my_offers(db: web::Data<Database>, req: HttpRequest) -> HttpResponse {
+    // Retrieve seller_id as String consistently
     let seller_id = match req.extensions().get::<String>() {
         Some(id) => id.clone(),
         None => {
@@ -487,7 +514,8 @@ async fn update_offer(
     path: web::Path<String>,
     body: web::Json<UpdateOfferRequest>,
 ) -> HttpResponse {
-    let user_id = match req.extensions().get::<String>() {
+    // Retrieve user_id as String consistently
+    let user_id_str = match req.extensions().get::<String>() {
         Some(id) => id.clone(),
         None => {
             return HttpResponse::InternalServerError().json(json!({
@@ -496,12 +524,51 @@ async fn update_offer(
             }));
         }
     };
+    // Convert to surrealdb::sql::Uuid for comparison with offer.seller_id
+    let user_id_sql_uuid = match surrealdb::Uuid::parse_str(&user_id_str) {
+        Ok(uuid) => surrealdb::sql::Uuid::from(uuid), // Convert uuid::Uuid to surrealdb::sql::Uuid
+        Err(e) => {
+            tracing::error!("Failed to parse user ID from string: {:?}", e);
+            return HttpResponse::InternalServerError().json(json!({
+                "success": false,
+                "message": "Internal server error: Invalid user ID format in context."
+            }));
+        }
+    };
     let offer_id = path.into_inner();
 
     match db.get_offer_by_id(offer_id.clone()).await {
         Ok(Some(offer)) => {
+            // Extract UUID from seller_id (Thing) for comparison
+            let offer_seller_id_sql_uuid = match offer.seller_id.id {
+                Id::Uuid(uuid) => uuid,
+                Id::String(s) => match surrealdb::Uuid::parse_str(&s) {
+                    Ok(uuid) => surrealdb::sql::Uuid::from(uuid), // Convert uuid::Uuid to surrealdb::sql::Uuid
+                    Err(_) => {
+                        tracing::error!(
+                            "Failed to parse seller_id string to UUID from offer: {}",
+                            s
+                        );
+                        return HttpResponse::InternalServerError().json(json!({
+                            "success": false,
+                            "message": "Internal server error: Invalid offer seller ID format."
+                        }));
+                    }
+                },
+                _ => {
+                    tracing::error!(
+                        "Unexpected ID type for offer seller_id: {:?}",
+                        offer.seller_id.id
+                    );
+                    return HttpResponse::InternalServerError().json(json!({
+                        "success": false,
+                        "message": "Internal server error: Unexpected offer seller ID format."
+                    }));
+                }
+            };
+
             // Check if the authenticated user is the seller of this offer
-            if offer.seller_id.id.to_string() != user_id {
+            if offer_seller_id_sql_uuid != user_id_sql_uuid {
                 return HttpResponse::Forbidden().json(json!({
                     "success": false,
                     "message": "You do not have permission to update this offer."
@@ -567,7 +634,8 @@ async fn delete_offer(
     req: HttpRequest,
     path: web::Path<String>,
 ) -> HttpResponse {
-    let user_id = match req.extensions().get::<String>() {
+    // Retrieve user_id as String consistently
+    let user_id_str = match req.extensions().get::<String>() {
         Some(id) => id.clone(),
         None => {
             return HttpResponse::InternalServerError().json(json!({
@@ -576,12 +644,51 @@ async fn delete_offer(
             }));
         }
     };
+    // Convert to surrealdb::sql::Uuid for comparison with offer.seller_id
+    let user_id_sql_uuid = match surrealdb::Uuid::parse_str(&user_id_str) {
+        Ok(uuid) => surrealdb::sql::Uuid::from(uuid), // Convert uuid::Uuid to surrealdb::sql::Uuid
+        Err(e) => {
+            tracing::error!("Failed to parse user ID from string: {:?}", e);
+            return HttpResponse::InternalServerError().json(json!({
+                "success": false,
+                "message": "Internal server error: Invalid user ID format in context."
+            }));
+        }
+    };
     let offer_id = path.into_inner();
 
     match db.get_offer_by_id(offer_id.clone()).await {
         Ok(Some(offer)) => {
+            // Extract UUID from seller_id (Thing) for comparison
+            let offer_seller_id_sql_uuid = match offer.seller_id.id {
+                Id::Uuid(uuid) => uuid,
+                Id::String(s) => match surrealdb::Uuid::parse_str(&s) {
+                    Ok(uuid) => surrealdb::sql::Uuid::from(uuid), // Convert uuid::Uuid to surrealdb::sql::Uuid
+                    Err(_) => {
+                        tracing::error!(
+                            "Failed to parse seller_id string to UUID from offer: {}",
+                            s
+                        );
+                        return HttpResponse::InternalServerError().json(json!({
+                            "success": false,
+                            "message": "Internal server error: Invalid offer seller ID format."
+                        }));
+                    }
+                },
+                _ => {
+                    tracing::error!(
+                        "Unexpected ID type for offer seller_id: {:?}",
+                        offer.seller_id.id
+                    );
+                    return HttpResponse::InternalServerError().json(json!({
+                        "success": false,
+                        "message": "Internal server error: Unexpected offer seller ID format."
+                    }));
+                }
+            };
+
             // Check if the authenticated user is the seller of this offer
-            if offer.seller_id.id.to_string() != user_id {
+            if offer_seller_id_sql_uuid != user_id_sql_uuid {
                 return HttpResponse::Forbidden().json(json!({
                     "success": false,
                     "message": "You do not have permission to delete this offer."
