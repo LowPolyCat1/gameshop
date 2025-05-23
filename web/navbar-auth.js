@@ -55,6 +55,7 @@ document.addEventListener('DOMContentLoaded', function () {
         // Sign Up
         const signupLink = document.createElement('a');
         signupLink.href = '/web/signup.html';
+        signupLink.text = "Sign Up"
         // Tailwind classes for signup link
         signupLink.className = 'text-white hover:text-yellow-500 transition duration-200 ease-in-out px-3 py-2 rounded-md';
         navbar.appendChild(signupLink);
@@ -62,6 +63,7 @@ document.addEventListener('DOMContentLoaded', function () {
         // Login
         const loginLink = document.createElement('a');
         loginLink.href = '/web/login.html';
+        loginLink.text = "Login"
         // Tailwind classes for login link
         loginLink.className = 'text-white hover:text-yellow-500 transition duration-200 ease-in-out px-3 py-2 rounded-md';
         navbar.appendChild(loginLink);
