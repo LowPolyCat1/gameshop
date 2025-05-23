@@ -3,13 +3,17 @@
 //! This module defines the Actix Web server and its routes for the IAM project.
 
 use crate::database::Database;
+use crate::jwt::extract_user_id_from_jwt;
+use crate::jwt::validate_jwt;
 use crate::middleware::AuthenticationMiddlewareFactory;
 use actix_files as fs;
 use actix_files::NamedFile;
 use actix_governor::{Governor, GovernorConfigBuilder};
 use actix_web::HttpRequest;
 use actix_web::Result;
+use actix_web::error::ErrorUnauthorized;
 use actix_web::{App, HttpMessage, HttpResponse, delete, get, post, put, web};
+use futures::future::err;
 use serde::{Deserialize, Serialize};
 use serde_json::json;
 use std::env::var;
@@ -346,14 +350,44 @@ async fn create_offer(
     req: HttpRequest,
     body: web::Json<CreateOfferRequest>,
 ) -> HttpResponse {
-    // Retrieve seller_id as String consistently
-    let seller_id = match req.extensions().get::<String>() {
-        Some(id) => id.clone(),
+    let auth_header = req.headers().get("Authorization");
+    let auth_header = match auth_header {
+        Some(header) => header,
         None => {
-            return HttpResponse::InternalServerError().json(json!({
-                "success": false,
-                "message": "Seller ID not found in request context."
-            }));
+            tracing::error!("Missing authorization header");
+            return HttpResponse::Unauthorized().finish();
+        }
+    };
+
+    let auth_value = match auth_header.to_str() {
+        Ok(value) => value,
+        Err(_) => {
+            tracing::error!("Invalid authorization header value");
+            return HttpResponse::Unauthorized().finish();
+        }
+    };
+
+    let token = match auth_value.strip_prefix("Bearer ") {
+        Some(token) => token.trim(),
+        None => {
+            tracing::error!("Invalid authorization format");
+            return HttpResponse::Unauthorized().finish();
+        }
+    };
+
+    match validate_jwt(token) {
+        Ok(_) => {}
+        Err(e) => {
+            tracing::error!("Invalid token: {}", e);
+            return HttpResponse::Unauthorized().finish();
+        }
+    };
+
+    let seller_id = match extract_user_id_from_jwt(token) {
+        Ok(user_id) => user_id,
+        Err(e) => {
+            tracing::error!("Failed to extract user ID: {}", e);
+            return HttpResponse::Unauthorized().finish();
         }
     };
 

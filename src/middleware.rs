@@ -60,6 +60,8 @@ where
             || req.path().starts_with("/auth/")
         {
             return Box::pin(self.service.call(req));
+        } else if *req.method() == Method::GET || req.path() == "/api/offers" {
+            return Box::pin(self.service.call(req));
         }
 
         let auth_header = req.headers().get("Authorization");
