@@ -55,7 +55,6 @@ where
     fn call(&self, req: ServiceRequest) -> Self::Future {
         // Skip authentication for OPTIONS requests or specific routes
         if *req.method() == Method::OPTIONS
-            || req.path() == "/api/ping"
             || req.path() == "/"
             || req.path().starts_with("/web/")
             || req.path().starts_with("/auth/")

@@ -2,7 +2,7 @@
 //!
 //! This is the main entry point for the gameshop project.
 
-use gameshop::server::start;
+use gameshop::server::run_server;
 
 #[tokio::main]
 /// Starts the application.
@@ -11,5 +11,5 @@ use gameshop::server::start;
 ///
 /// A `Result` indicating success or failure.
 async fn main() {
-    let _ = start().await;
+    let _ = run_server().await;
 }
