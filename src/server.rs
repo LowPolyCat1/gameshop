@@ -2,15 +2,14 @@
 //!
 //! This module defines the Actix Web server and its routes for the IAM project.
 
-use crate::database::Database; // Import UserPublicProfile
-use crate::errors::custom_errors::CustomError;
+use crate::database::Database;
 use crate::middleware::AuthenticationMiddlewareFactory;
 use actix_files as fs;
 use actix_files::NamedFile;
 use actix_governor::{Governor, GovernorConfigBuilder};
 use actix_web::HttpRequest;
 use actix_web::Result;
-use actix_web::{App, HttpMessage, HttpResponse, Responder, delete, get, post, put, web};
+use actix_web::{App, HttpMessage, HttpResponse, delete, get, post, put, web};
 use serde::{Deserialize, Serialize};
 use serde_json::json;
 use std::env::var;
