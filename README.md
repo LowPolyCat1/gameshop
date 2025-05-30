@@ -146,7 +146,7 @@ To get a local copy up and running follow these simple steps.
 
 2. Rename the [env_example](./env_example) file to `.env` and change the settings
 
-    ```
+    ```env
     SERVER_IP = "0.0.0.0"
     SERVER_PORT = "8080"
     DOCKER_EXPOSED_PORT = "8080"
