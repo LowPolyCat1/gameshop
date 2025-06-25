@@ -1,6 +1,6 @@
 //! src/tests/tests.rs
 //!
-//! This module contains integration tests for the IAM project.
+//! This module contains integration tests for the gameshop project.
 
 use std::env;
 
@@ -24,7 +24,7 @@ fn setup() {
 mod tests {
     use crate::encryption::{decrypt_with_nonce, encrypt_with_random_nonce, generate_key};
     use crate::hashing::{hash_random_salt, verify_password};
-    use std::env;
+    // use std::env;
 
     #[test]
     fn test_hashing_correct() {

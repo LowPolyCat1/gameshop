@@ -1,6 +1,6 @@
 //! src/errors/custom_errors.rs
 //!
-//! This module defines custom error types for the IAM project.
+//! This module defines custom error types for the gameshop project.
 
 use thiserror::Error;
 

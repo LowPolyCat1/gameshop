@@ -55,11 +55,11 @@ where
     fn call(&self, req: ServiceRequest) -> Self::Future {
         // Skip authentication for OPTIONS requests or specific routes
         if *req.method() == Method::OPTIONS
-            || req.path() == "/api/register"
-            || req.path() == "/api/login"
-            || req.path() == "/api/ping"
-            || req.path() == "/home"
+            || req.path() == "/"
             || req.path().starts_with("/web/")
+            || req.path().starts_with("/auth/")
+            || req.path() == "/api/offers"
+            || *req.method() == Method::GET
         {
             return Box::pin(self.service.call(req));
         }

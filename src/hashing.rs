@@ -3,11 +3,11 @@
 //! This module provides password hashing and verification functionalities using the Argon2id algorithm.
 
 use argon2::{
-    password_hash::{
-        rand_core::OsRng, Error as Argon2Error, PasswordHash, PasswordHasher, PasswordVerifier,
-        SaltString,
-    },
     Argon2,
+    password_hash::{
+        Error as Argon2Error, PasswordHash, PasswordHasher, PasswordVerifier, SaltString,
+        rand_core::OsRng,
+    },
 };
 
 use std::error::Error as StdError;

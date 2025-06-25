@@ -10,7 +10,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const password = form.password.value;
 
     try {
-      const response = await fetch('/api/login', {
+      const response = await fetch('/auth/login', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -25,7 +25,8 @@ document.addEventListener('DOMContentLoaded', function () {
           errorMsg = error.message || errorMsg;
         } catch { }
         messageDiv.textContent = errorMsg;
-        messageDiv.style.color = 'red';
+        messageDiv.classList.remove('hidden'); // Ensure message is visible
+        messageDiv.classList.add('text-red-600'); // Style for error messages
         return;
       }
 
@@ -35,13 +36,15 @@ document.addEventListener('DOMContentLoaded', function () {
 
       if (!jwt) {
         messageDiv.textContent = 'Login failed: No token received.';
-        messageDiv.style.color = 'red';
+        messageDiv.classList.remove('hidden');
+        messageDiv.classList.add('text-red-600');
         return;
       }
 
       if (!username) {
         messageDiv.textContent = 'Login failed: No username.';
-        messageDiv.style.color = 'red';
+        messageDiv.classList.remove('hidden');
+        messageDiv.classList.add('text-red-600');
         return;
       }
 
@@ -51,7 +54,9 @@ document.addEventListener('DOMContentLoaded', function () {
       localStorage.setItem('username', username);
 
       messageDiv.textContent = 'Login successful!';
-      messageDiv.style.color = 'green';
+      messageDiv.classList.remove('hidden');
+      messageDiv.classList.remove('text-red-600'); // Remove red if previously set
+      messageDiv.classList.add('text-green-600'); // Style for success messages
 
       // Redirect to homepage or update UI
       setTimeout(() => {
@@ -60,7 +65,8 @@ document.addEventListener('DOMContentLoaded', function () {
 
     } catch (err) {
       messageDiv.textContent = 'An error occurred. Please try again.';
-      messageDiv.style.color = 'red';
+      messageDiv.classList.remove('hidden');
+      messageDiv.classList.add('text-red-600');
     }
   });
 });

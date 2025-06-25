@@ -4,34 +4,77 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GameSwap</title>
+    <title>GameSwap - Your Peer-to-Peer Videogame Marketplace</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="/web/style.css">
 </head>
 
-<body>
-    <header>
-        <div class="container">
-            <h1>GameSwap</h1>
-            <nav id="navbar-links">
-                <a href="/web/index.html">Home</a>
-                <a href="/web/browse.html">Browse Games</a>
-                <a href="/web/sell.html">Sell a Game</a>
-                <!-- Auth links will be injected here by JS -->
+<body class="min-h-screen flex flex-col bg-gray-100 text-gray-800">
+    <header class="bg-gray-900 text-white py-4 shadow-md">
+        <div class="container mx-auto px-4 flex flex-col sm:flex-row justify-between items-center">
+            <h1 class="text-3xl font-bold tracking-wide mb-4 sm:mb-0">GameSwap</h1>
+            <nav id="navbar-links" class="flex flex-wrap justify-center sm:justify-end space-x-4">
             </nav>
         </div>
     </header>
-    <section class="main">
-        <div class="container">
-            <h2>Welcome to GameSwap!</h2>
-            <p>Buy and sell video games with other gamers, directly.</p>
+
+    <section class="bg-gradient-to-r from-gray-900 to-gray-700 text-white py-20 px-4 text-center">
+        <div class="container mx-auto">
+            <h2 class="text-5xl md:text-6xl font-extrabold leading-tight mb-6 animate-fade-in-down">
+                Swap, Sell, and Discover Your Next Favorite Game!
+            </h2>
+            <p class="text-xl md:text-2xl text-gray-300 mb-10 max-w-3xl mx-auto animate-fade-in-up"
+                style="animation-delay: 0.3s;">
+                Connect with gamers, find great deals, and give your old games a new life.
+            </p>
+            <div class="flex flex-col sm:flex-row justify-center gap-4 animate-fade-in-up"
+                style="animation-delay: 0.6s;">
+                <a href="/web/browse.html"
+                    class="inline-block bg-yellow-500 text-gray-900 font-bold py-3 px-8 rounded-full text-lg hover:bg-yellow-600 transition duration-300 ease-in-out shadow-lg hover:shadow-xl transform hover:-translate-y-1">
+                    Browse Games
+                </a>
+                <a href="/web/sell.html"
+                    class="inline-block bg-gray-700 text-white font-bold py-3 px-8 rounded-full text-lg hover:bg-gray-800 transition duration-300 ease-in-out shadow-lg hover:shadow-xl transform hover:-translate-y-1">
+                    Sell Your Games
+                </a>
+            </div>
         </div>
     </section>
-    <footer>
-        <div class="container">
-            <p>&copy; 2025 GameSwap. Peer-to-peer videogame marketplace.</p>
+
+    <section class="py-16 px-4 bg-white">
+        <div class="container mx-auto text-center">
+            <h3 class="text-4xl font-extrabold text-gray-900 mb-12">Why Choose GameSwap?</h3>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div
+                    class="bg-gray-50 p-8 rounded-xl shadow-md transform transition-transform duration-300 hover:scale-105 hover:shadow-lg">
+                    <div class="text-yellow-500 text-5xl mb-4">🎮</div>
+                    <h4 class="text-2xl font-semibold text-gray-900 mb-3">Vast Selection</h4>
+                    <p class="text-gray-600">Explore thousands of titles from various platforms and genres, all listed
+                        by real gamers.</p>
+                </div>
+                <div
+                    class="bg-gray-50 p-8 rounded-xl shadow-md transform transition-transform duration-300 hover:scale-105 hover:shadow-lg">
+                    <div class="text-yellow-500 text-5xl mb-4">💰</div>
+                    <h4 class="text-2xl font-semibold text-gray-900 mb-3">Great Deals</h4>
+                    <p class="text-gray-600">Find pre-owned games at unbeatable prices, or make some cash selling your
+                        own collection.</p>
+                </div>
+                <div
+                    class="bg-gray-50 p-8 rounded-xl shadow-md transform transition-transform duration-300 hover:scale-105 hover:shadow-lg">
+                    <div class="text-yellow-500 text-5xl mb-4">🤝</div>
+                    <h4 class="text-2xl font-semibold text-gray-900 mb-3">Community Driven</h4>
+                    <p class="text-gray-600">Connect with fellow gamers, trade directly, and build your trusted network.
+                    </p>
+                </div>
+            </div>
         </div>
-    </footer>
+    </section>
+
+
+
     <script src="/web/navbar-auth.js"></script>
+    <script src="/web/add-footer.js"></script>
 </body>
 
 </html>

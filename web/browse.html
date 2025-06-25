@@ -5,36 +5,40 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Browse Games - GameSwap</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="/web/style.css">
 </head>
 
-<body>
-    <header>
-        <div class="container">
-            <h1>GameSwap</h1>
-            <!-- NOTE: nav has the proper id for navbar-auth.js to hook into -->
-            <nav id="navbar-links">
-                <!-- navbar-auth.js will inject Home, Browse, Sell, plus Login/Sign Up OR Profile/Logout -->
+<body class="min-h-screen flex flex-col bg-gray-100 text-gray-800">
+    <header class="bg-gray-900 text-white py-4 shadow-md">
+        <div class="container mx-auto px-4 flex flex-col sm:flex-row justify-between items-center">
+            <h1 class="text-3xl font-bold tracking-wide mb-4 sm:mb-0">GameSwap</h1>
+            <nav id="navbar-links" class="flex flex-wrap justify-center sm:justify-end space-x-4">
             </nav>
         </div>
     </header>
 
-    <section class="main">
-        <div class="container">
-            <h2>Browse Games</h2>
-            <p>Explore the latest listings from gamers across the country.</p>
-            <!-- Game listings would go here -->
-        </div>
-    </section>
+    <main class="flex-grow py-8 px-4">
+        <div class="container mx-auto">
+            <h2 class="text-4xl font-extrabold text-gray-900 text-center mb-4">Browse Games</h2>
+            <p class="text-xl text-gray-600 text-center mb-10">Explore the latest listings from gamers across the
+                country.</p>
 
-    <footer>
-        <div class="container">
-            <p>&copy; 2025 GameSwap. Peer-to-peer videogame marketplace.</p>
-        </div>
-    </footer>
+            <div id="game-listings" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+            </div>
 
-    <!-- Include your auth-aware navbar script -->
+            <div id="loading-indicator" class="hidden text-center py-8">
+                <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-gray-900 mx-auto"></div>
+                <p class="mt-4 text-gray-600">Loading more games...</p>
+            </div>
+        </div>
+    </main>
+
+
     <script src="/web/navbar-auth.js"></script>
+    <script src="/web/browse-games.js"></script>
+    <script src="/web/add-footer.js"></script>
 </body>
 
 </html>

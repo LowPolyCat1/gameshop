@@ -5,118 +5,49 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Your Profile - GameSwap</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="/web/style.css">
-    <style>
-        .profile-card {
-            background: #23272f;
-            color: #fff;
-            border-radius: 16px;
-            padding: 2rem 2.5rem;
-            max-width: 400px;
-            margin: 3rem auto 2rem auto;
-            box-shadow: 0 4px 20px rgba(35, 39, 47, 0.15);
-            text-align: center;
-        }
-
-        .profile-avatar {
-            width: 90px;
-            height: 90px;
-            border-radius: 50%;
-            background: #ffb400;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin: 0 auto 1rem auto;
-            box-shadow: 0 2px 8px rgba(35, 39, 47, 0.10);
-        }
-
-        .profile-avatar svg {
-            width: 60px;
-            height: 60px;
-            display: block;
-        }
-
-        .profile-info {
-            margin-bottom: 1.5rem;
-        }
-
-        .profile-info h2 {
-            margin-bottom: 0.3rem;
-        }
-
-        .profile-actions button {
-            background: #ffb400;
-            color: #23272f;
-            border: none;
-            padding: 0.6rem 1.2rem;
-            border-radius: 20px;
-            font-weight: bold;
-            cursor: pointer;
-            margin: 0 0.5rem;
-            transition: background 0.2s;
-        }
-
-        .profile-actions button:hover {
-            background: #ffd966;
-        }
-    </style>
 </head>
 
-<body>
-    <header>
-        <div class="container">
-            <h1>GameSwap</h1>
-            <nav id="navbar-links">
-                <a href="/web/index.html">Home</a>
-                <a href="/web/browse.html">Browse Games</a>
-                <a href="/web/sell.html">Sell a Game</a>
-                <!-- Auth links will be injected here by JS -->
-            </nav>
+<body class="min-h-screen flex flex-col bg-gray-100 text-gray-800">
+    <header class="bg-gray-900 text-white py-4 shadow-md">
+        <div class="container mx-auto px-4 flex flex-col sm:flex-row justify-between items-center">
+            <h1 class="text-3xl font-bold tracking-wide mb-4 sm:mb-0">GameSwap</h1>
+            <nav id="navbar-links" class="flex flex-wrap justify-center sm:justify-end space-x-4"></nav>
         </div>
     </header>
-    <section class="main">
-        <div class="profile-card" id="profile-card">
-            <div class="profile-avatar" id="profile-avatar">
-                <!-- SVG Profile Icon -->
-                <svg viewBox="0 0 24 24" fill="#23272f" xmlns="http://www.w3.org/2000/svg">
+
+    <section class="flex-grow py-8 px-4">
+        <div class="bg-gray-900 text-white rounded-2xl p-8 max-w-md mx-auto my-12 shadow-xl text-center">
+            <div class="w-24 h-24 rounded-full bg-yellow-500 flex items-center justify-center mx-auto mb-4 shadow-lg">
+                <svg class="w-16 h-16 fill-gray-900" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                     <circle cx="12" cy="8" r="6" />
                     <path d="M12 16c-6 0-9 3-9 4.5V22h18v-1.5C21 19 18 16 12 16z" />
                 </svg>
             </div>
-            <div class="profile-info">
-                <h2 id="profile-username">Username</h2>
+            <div class="mb-6">
+                <h2 id="profile-username" class="text-3xl font-bold mb-2">Username</h2>
             </div>
-            <div class="profile-actions">
-                <button onclick="window.location.href='/web/edit-profile.html'">Edit Profile</button>
-                <button id="logout-btn">Logout</button>
+            <div class="flex justify-center space-x-4">
+                <button onclick="window.location.href='/web/edit-profile.html'"
+                    class="bg-yellow-500 text-gray-900 font-bold py-2 px-6 rounded-full hover:bg-yellow-600 transition duration-300 ease-in-out shadow-md hover:shadow-lg">
+                    Edit Profile
+                </button>
+                <button id="logout-btn"
+                    class="bg-gray-700 text-white font-bold py-2 px-6 rounded-full hover:bg-gray-800 transition duration-300 ease-in-out shadow-md hover:shadow-lg">
+                    Logout
+                </button>
             </div>
         </div>
     </section>
-    <footer>
-        <div class="container">
-            <p>&copy; 2025 GameSwap. Peer-to-peer videogame marketplace.</p>
-        </div>
-    </footer>
+
+
+
+
+    <script src="/web/profile.js"></script>
     <script src="/web/navbar-auth.js"></script>
-    <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            const jwt = localStorage.getItem('jwt');
-            const username = localStorage.getItem('username');
-
-            if (!jwt || !username) {
-                window.location.href = '/web/login.html';
-                return;
-            }
-
-            document.getElementById('profile-username').textContent = username;
-
-            document.getElementById('logout-btn').addEventListener('click', function () {
-                localStorage.removeItem('jwt');
-                localStorage.removeItem('username');
-                window.location.href = '/web/index.html';
-            });
-        });
-    </script>
+    <script src="/web/add-footer.js"></script>
 </body>
 
 </html>

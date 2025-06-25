@@ -12,23 +12,23 @@
 <!-- PROJECT LOGO -->
 <br />
 <div align="center">
-  <a href="https://github.com/lowpolycat1/IAM">
+  <a href="https://github.com/lowpolycat1/gameshop">
     <img src="readme-sections/logo.png" alt="Logo" width="80" height="80">
   </a>
 
-<h3 align="center">iam secure</h3>
+<h3 align="center">GameShop</h3>
 
   <p align="center">
-    A secure Identity and Access Management System
+    An Example Project
     <br />
-    <a href="https://github.com/lowpolycat1/IAM"><strong>Explore the docs »</strong></a>
+    <!-- <a href="https://github.com/lowpolycat1/gameshop"><strong>Explore the docs »</strong></a> -->
+    <!-- <br /> -->
     <br />
-    <br />
-    <!-- <a href="https://github.com/lowpolycat1/IAM">View Demo</a> -->
+    <!-- <a href="https://github.com/lowpolycat1/gameshop">View Demo</a> -->
     <!-- · -->
-    <a href="https://github.com/lowpolycat1/IAM/issues/new?labels=bug&template=bug-report---.md">Report Bug</a>
+    <a href="https://github.com/lowpolycat1/gameshop/issues/new?labels=bug&template=bug-report---.md">Report Bug</a>
     ·
-    <a href="https://github.com/lowpolycat1/IAM/issues/new?labels=enhancement&template=feature-request---.md">Request Feature</a>
+    <a href="https://github.com/lowpolycat1/gameshop/issues/new?labels=enhancement&template=feature-request---.md">Request Feature</a>
   </p>
 </div>
 
@@ -63,7 +63,7 @@
 
 [![Product Name Screen Shot][product-screenshot]]()
 
-This project is a demonstration of an Identity and Access Management (IAM) system built with Rust. It showcases various security features and best practices, including:
+This project is a demonstration of an Identity and Access Management (gameshop) system built with Rust. It showcases various security features and best practices, including:
 
 * Secure password handling (hashing) using Argon2id with salt
 * User data encryption and decryption with ChaCha20-Poly130
@@ -107,7 +107,7 @@ To get a local copy up and running follow these simple steps.
 1. Clone the repo
 
     ```sh
-    git clone https://github.com/lowpolycat1/IAM.git
+    git clone https://github.com/lowpolycat1/gameshop.git
     ```
 
 2. Rename the [env_example](./env_example) file to `.env` and change the settings
@@ -141,12 +141,12 @@ To get a local copy up and running follow these simple steps.
 1. Clone the repo
 
     ```sh
-    git clone https://github.com/lowpolycat1/IAM.git
+    git clone https://github.com/lowpolycat1/gameshop.git
     ```
 
 2. Rename the [env_example](./env_example) file to `.env` and change the settings
 
-    ```
+    ```env
     SERVER_IP = "0.0.0.0"
     SERVER_PORT = "8080"
     DOCKER_EXPOSED_PORT = "8080"
@@ -159,13 +159,13 @@ To get a local copy up and running follow these simple steps.
 3. Build the project
 
     ```sh
-    docker build -t iam .
+    docker build -t gameshop .
     ```
 
 4. Run the project
 
     ```sh
-    docker run -d -p {SERVER_IP}:{SERVER_PORT}:{DOCKER_EXPOSED_PORT} iam
+    docker run -d -p {SERVER_IP}:{SERVER_PORT}:{DOCKER_EXPOSED_PORT} gameshop
     ```
 
 #### Python Script
@@ -191,24 +191,25 @@ _For more examples, please refer to the [Documentation]()_
 * [x] Secure config management using .env
 * [x] Password hashing using Argon2
 * [x] Data encryption using ChaCha20-Poly130
-* [ ] API endpoints
+* [x] API endpoints
   * [x] /register
   * [x] /login
   * [x] /change_username
-  * [ ] /change_email
   * [x] /change_password
-  * [ ] /reset_password
 * [x] Portability via Docker
 * [x] JWT Token authentication
 * [x] Rate limiting
-* [ ] Using a Cryptographically secure RNG
 
 ##### Maybes
 
 * [ ] HTTPS everywhere for data in transit
 * [ ] Implementing database Migration service
+* [ ] API endpoints
+  * [ ] /change_email
+  * [ ] /reset_password
+* [ ] Using a Cryptographically secure RNG
 
-See the [open issues](https://github.com/lowpolycat1/IAM/issues) for a full list of proposed features (and known issues).
+See the [open issues](https://github.com/lowpolycat1/gameshop/issues) for a full list of proposed features (and known issues).
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -232,8 +233,8 @@ Don't forget to give the project a star! Thanks again!
 
 ### Top contributors
 
-<a href="https://github.com/lowpolycat1/IAM/graphs/contributors">
-  <img src="https://contrib.rocks/image?repo=LowPolyCat1/IAM" alt="contrib.rocks image" />
+<a href="https://github.com/lowpolycat1/gameshop/graphs/contributors">
+  <img src="https://contrib.rocks/image?repo=LowPolyCat1/gameshop" alt="contrib.rocks image" />
 </a>
 
 <!-- LICENSE -->
@@ -248,7 +249,7 @@ Distributed under the MIT License. See `LICENSE.txt` for more information.
 
 lowpolycat1
 
-Project Link: [https://github.com/lowpolycat1/IAM](https://github.com/lowpolycat1/IAM)
+Project Link: [https://github.com/lowpolycat1/gameshop](https://github.com/lowpolycat1/gameshop)
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -263,16 +264,16 @@ Project Link: [https://github.com/lowpolycat1/IAM](https://github.com/lowpolycat
 
 <!-- MARKDOWN LINKS & IMAGES -->
 <!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->
-[contributors-shield]: https://img.shields.io/github/contributors/lowpolycat1/IAM.svg?style=for-the-badge
-[contributors-url]: https://github.com/lowpolycat1/IAM/graphs/contributors
-[forks-shield]: https://img.shields.io/github/forks/lowpolycat1/IAM.svg?style=for-the-badge
-[forks-url]: https://github.com/lowpolycat1/IAM/network/members
-[stars-shield]: https://img.shields.io/github/stars/lowpolycat1/IAM.svg?style=for-the-badge
-[stars-url]: https://github.com/lowpolycat1/IAM/stargazers
-[issues-shield]: https://img.shields.io/github/issues/lowpolycat1/IAM.svg?style=for-the-badge
-[issues-url]: https://github.com/lowpolycat1/IAM/issues
-[license-shield]: https://img.shields.io/github/license/lowpolycat1/IAM.svg?style=for-the-badge
-[license-url]: https://github.com/lowpolycat1/IAM/blob/master/LICENSE.txt
+[contributors-shield]: https://img.shields.io/github/contributors/lowpolycat1/gameshop.svg?style=for-the-badge
+[contributors-url]: https://github.com/lowpolycat1/gameshop/graphs/contributors
+[forks-shield]: https://img.shields.io/github/forks/lowpolycat1/gameshop.svg?style=for-the-badge
+[forks-url]: https://github.com/lowpolycat1/gameshop/network/members
+[stars-shield]: https://img.shields.io/github/stars/lowpolycat1/gameshop.svg?style=for-the-badge
+[stars-url]: https://github.com/lowpolycat1/gameshop/stargazers
+[issues-shield]: https://img.shields.io/github/issues/lowpolycat1/gameshop.svg?style=for-the-badge
+[issues-url]: https://github.com/lowpolycat1/gameshop/issues
+[license-shield]: https://img.shields.io/github/license/lowpolycat1/gameshop.svg?style=for-the-badge
+[license-url]: https://github.com/lowpolycat1/gameshop/blob/master/LICENSE.txt
 [linkedin-shield]: https://img.shields.io/badge/-LinkedIn-black.svg?style=for-the-badge&logo=linkedin&colorB=555
 [linkedin-url]: https://linkedin.com/in/your_linkedin_username
 [product-screenshot]: images/screenshot.png

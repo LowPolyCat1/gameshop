@@ -14,7 +14,7 @@ document.addEventListener('DOMContentLoaded', function () {
     // Add other fields as needed (e.g., username, but do not expect it back)
 
     try {
-      const response = await fetch('/api/register', {
+      const response = await fetch('/auth/register', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ firstname, lastname, username, email, password })
@@ -28,7 +28,8 @@ document.addEventListener('DOMContentLoaded', function () {
           errorMsg = error.message || errorMsg;
         } catch { }
         messageDiv.textContent = errorMsg;
-        messageDiv.style.color = 'red';
+        messageDiv.classList.remove('hidden'); // Ensure message is visible
+        messageDiv.classList.add('text-red-600'); // Style for error messages
         return;
       }
 
@@ -37,15 +38,20 @@ document.addEventListener('DOMContentLoaded', function () {
 
       if (!jwt) {
         messageDiv.textContent = 'Signup failed: No token received.';
-        messageDiv.style.color = 'red';
+        messageDiv.classList.remove('hidden');
+        messageDiv.classList.add('text-red-600');
         return;
       }
 
       // Store JWT in localStorage
       localStorage.setItem('jwt', jwt);
 
+      localStorage.setItem('username', username);
+
       messageDiv.textContent = 'Signup successful!';
-      messageDiv.style.color = 'green';
+      messageDiv.classList.remove('hidden');
+      messageDiv.classList.remove('text-red-600'); // Remove red if previously set
+      messageDiv.classList.add('text-green-600'); // Style for success messages
 
       // Redirect to homepage or update UI
       setTimeout(() => {
@@ -54,7 +60,8 @@ document.addEventListener('DOMContentLoaded', function () {
 
     } catch (err) {
       messageDiv.textContent = 'An error occurred. Please try again.';
-      messageDiv.style.color = 'red';
+      messageDiv.classList.remove('hidden');
+      messageDiv.classList.add('text-red-600');
     }
   });
 });

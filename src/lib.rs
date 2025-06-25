@@ -1,6 +1,6 @@
 //! src/lib.rs
 //!
-//! This is the main library module for the IAM project. It defines and exports other modules.
+//! This is the main library module for the gameshop project. It defines and exports other modules.
 
 /// The test module
 #[cfg(test)]
