@@ -16,13 +16,13 @@
     <img src="readme-sections/logo.png" alt="Logo" width="80" height="80">
   </a>
 
-<h3 align="center">iam secure</h3>
+<h3 align="center">GameShop</h3>
 
   <p align="center">
-    A secure Identity and Access Management System
+    An Example Project
     <br />
-    <a href="https://github.com/lowpolycat1/IAM"><strong>Explore the docs »</strong></a>
-    <br />
+    <!-- <a href="https://github.com/lowpolycat1/IAM"><strong>Explore the docs »</strong></a> -->
+    <!-- <br /> -->
     <br />
     <!-- <a href="https://github.com/lowpolycat1/IAM">View Demo</a> -->
     <!-- · -->
@@ -191,22 +191,23 @@ _For more examples, please refer to the [Documentation]()_
 * [x] Secure config management using .env
 * [x] Password hashing using Argon2
 * [x] Data encryption using ChaCha20-Poly130
-* [ ] API endpoints
+* [x] API endpoints
   * [x] /register
   * [x] /login
   * [x] /change_username
-  * [ ] /change_email
   * [x] /change_password
-  * [ ] /reset_password
 * [x] Portability via Docker
 * [x] JWT Token authentication
 * [x] Rate limiting
-* [ ] Using a Cryptographically secure RNG
 
 ##### Maybes
 
 * [ ] HTTPS everywhere for data in transit
 * [ ] Implementing database Migration service
+* [ ] API endpoints
+  * [ ] /change_email
+  * [ ] /reset_password
+* [ ] Using a Cryptographically secure RNG
 
 See the [open issues](https://github.com/lowpolycat1/IAM/issues) for a full list of proposed features (and known issues).
 
