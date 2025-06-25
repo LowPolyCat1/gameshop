@@ -1,6 +1,6 @@
 //! src/server.rs
 //!
-//! This module defines the Actix Web server and its routes for the IAM project.
+//! This module defines the Actix Web server and its routes for the gameshop project.
 
 use crate::database::Database;
 use crate::jwt::extract_user_id_from_jwt;
@@ -793,8 +793,11 @@ async fn index() -> Result<NamedFile> {
 /// A `Result` indicating the success or failure of the server startup.
 pub async fn run_server() -> std::io::Result<()> {
     // Initialize tracing subscriber for logging
-    let file_appender =
-        tracing_appender::rolling::RollingFileAppender::new(Rotation::DAILY, "./logs", "iam.log");
+    let file_appender = tracing_appender::rolling::RollingFileAppender::new(
+        Rotation::DAILY,
+        "./logs",
+        "gameshop.log",
+    );
     let (non_blocking_appender, _guard) = tracing_appender::non_blocking(file_appender);
     tracing_subscriber::fmt()
         .with_max_level(tracing::Level::INFO)

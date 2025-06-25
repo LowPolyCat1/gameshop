@@ -1,6 +1,6 @@
 //! src/tests/tests.rs
 //!
-//! This module contains integration tests for the IAM project.
+//! This module contains integration tests for the gameshop project.
 
 use std::env;
 

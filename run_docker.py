@@ -9,7 +9,7 @@ if __name__ == "__main__":
     server_ip = os.getenv("SERVER_IP")
     server_port = os.getenv("SERVER_PORT")
     docker_exposed_port = os.getenv("DOCKER_EXPOSED_PORT")
-    image_name = "iam-secure"
+    image_name = "gameshop"
 
     if not server_ip or not server_port:
         raise ValueError("SERVER_IP or SERVER_PORT is missing in .env file!")

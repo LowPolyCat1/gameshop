@@ -1,11 +1,13 @@
 //! src/lib.rs
 //!
-//! This is the main library module for the IAM project. It defines and exports other modules.
+//! This is the main library module for the gameshop project. It defines and exports other modules.
 
 /// The test module
 #[cfg(test)]
 pub mod tests;
 
+/// The database module
+pub mod database;
 /// The encryption module
 pub mod encryption;
 /// The errors module
@@ -20,5 +22,3 @@ pub mod logging;
 pub mod middleware;
 /// The server module
 pub mod server;
-/// The database module
-pub mod database;
