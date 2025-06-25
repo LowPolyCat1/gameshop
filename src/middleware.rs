@@ -58,9 +58,9 @@ where
             || req.path() == "/"
             || req.path().starts_with("/web/")
             || req.path().starts_with("/auth/")
+            || req.path() == "/api/offers"
+            || *req.method() == Method::GET
         {
-            return Box::pin(self.service.call(req));
-        } else if *req.method() == Method::GET || req.path() == "/api/offers" {
             return Box::pin(self.service.call(req));
         }
 
